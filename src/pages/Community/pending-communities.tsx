@@ -3,7 +3,7 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { IoMdCheckmark } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const communities = [
   {
@@ -73,7 +73,7 @@ const communities = [
   },
 ];
 
-const ApprovedCommunities: React.FC = () => {
+const PendingCommunities: React.FC = () => {
   const navigate = useNavigate();
 
   const viewHandler = (community:any) => {
@@ -81,7 +81,7 @@ const ApprovedCommunities: React.FC = () => {
   };
   return (
     <>
-      <Breadcrumb pageName="Approved Communities" />
+      <Breadcrumb pageName="Pending Communities" />
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -131,7 +131,12 @@ const ApprovedCommunities: React.FC = () => {
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        
+                        <button
+                          className="hover:text-primary bg-green-400 hover:bg-slate-100 rounded-full p-1"
+                          id="mark-button"
+                        >
+                          <IoMdCheckmark size={20} className='text-white'/>
+                        </button>
                         <button
                           className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
                           id="cross-button"
@@ -158,4 +163,4 @@ const ApprovedCommunities: React.FC = () => {
   );
 };
 
-export default ApprovedCommunities;
+export default PendingCommunities;

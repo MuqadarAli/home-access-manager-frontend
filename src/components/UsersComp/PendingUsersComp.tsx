@@ -3,85 +3,69 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { IoMdCheckmark } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const communities = [
-  {
-    name: 'Green Valley Community',
-    communityType: 'Residential',
-    description: 'A peaceful residential community surrounded by nature.',
-    address: '123 Green Valley Rd',
-    area: 'Green Valley',
-    zip_code: '12345',
-    admin: {
-      name: 'John Doe',
-      email: 'johndoe@greenvalley.com',
-      phone: '555-123-4567',
+const users = [
+    {
+      id: 1,
+      first_name: "John",
+      last_name: "Doe",
+      email: "john.doe@example.com",
+      phone_number: "123-456-7890",
+      address: "123 Maple Street",
+      postal_code: "12345",
+      house_number: "123",
+      join_date: "",
+      created_date: "2021-01-05"
     },
-  },
-  {
-    name: 'Tech Hub Community',
-    communityType: 'Commercial',
-    description: 'A vibrant tech community with state-of-the-art facilities.',
-    address: '456 Tech Park Ave',
-    area: 'Tech District',
-    zip_code: '67890',
-    admin: {
-      name: 'Jane Smith',
-      email: 'janesmith@techhub.com',
-      phone: '555-987-6543',
+    {
+      id: 2,
+      first_name: "Jane",
+      last_name: "Smith",
+      email: "jane.smith@example.com",
+      phone_number: "987-654-3210",
+      address: "456 Oak Avenue",
+      postal_code: "67890",
+      house_number: "456",
+      join_date: "",
+      created_date: "2021-02-10"
     },
-  },
-  {
-    name: 'Cultural Arts Community',
-    communityType: 'Cultural',
-    description: 'A community focused on promoting arts and culture.',
-    address: '789 Arts Center Blvd',
-    area: 'Cultural Arts',
-    zip_code: '11223',
-    admin: {
-      name: 'Emily Johnson',
-      email: 'emilyjohnson@culturalarts.com',
-      phone: '555-234-5678',
+    {
+      id: 3,
+      first_name: "Alice",
+      last_name: "Johnson",
+      email: "alice.johnson@example.com",
+      phone_number: "555-555-5555",
+      address: "789 Pine Road",
+      postal_code: "11223",
+      house_number: "789",
+      join_date: "",
+      created_date: "2021-03-15"
     },
-  },
-  {
-    name: 'Fitness and Wellness Community',
-    communityType: 'Recreational',
-    description: 'A community dedicated to fitness and wellness activities.',
-    address: '321 Wellness Way',
-    area: 'Health District',
-    zip_code: '33445',
-    admin: {
-      name: 'Michael Brown',
-      email: 'michaelbrown@wellnesscommunity.com',
-      phone: '555-345-6789',
-    },
-  },
-  {
-    name: 'Eco-Friendly Community',
-    communityType: 'Sustainable',
-    description: 'A community committed to sustainable living practices.',
-    address: '654 Eco Lane',
-    area: 'Green Zone',
-    zip_code: '55667',
-    admin: {
-      name: 'Olivia Wilson',
-      email: 'oliviawilson@ecofriendly.com',
-      phone: '555-456-7890',
-    },
-  },
-];
+    {
+      id: 4,
+      first_name: "Bob",
+      last_name: "Brown",
+      email: "bob.brown@example.com",
+      phone_number: "222-222-2222",
+      address: "101 Spruce Blvd",
+      postal_code: "22134",
+      house_number: "101",
+      join_date: "",
+      created_date: "2021-04-20"
+    }
+  ];
+    
 
-const ApproveCommunities: React.FC = () => {
+const PendingUsersComp: React.FC = () => {
   const navigate = useNavigate();
 
-  const viewHandler = (community:any) => {
-    navigate('/communities/community-detail', {state: {community}});
+  const viewHandler = (user:any) => {
+    navigate('/users/user-detail', {state: {user}});
   };
   return (
     <>
-      <Breadcrumb pageName="Approve Communities" />
+      <Breadcrumb pageName="Pending Users" />
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -90,16 +74,16 @@ const ApproveCommunities: React.FC = () => {
               <thead>
                 <tr className="bg-gray-2 text-left dark:bg-meta-4">
                   <th className="min-w-[220px]  py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                    Name
+                    First Name
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
-                    Community Type
+                    Last Name
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    Area
+                    Email
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    Admin
+                    Phone Number
                   </th>
                   <th className="py-4 px-4 font-medium text-black dark:text-white">
                     Actions
@@ -107,46 +91,46 @@ const ApproveCommunities: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {communities.map((community, key) => (
+                {users?.map((user, key) => (
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="font-medium text-black dark:text-white">
-                        {community.name}
+                        {user.first_name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.area}
+                        {user.last_name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.communityType}
+                        {user.email}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.admin.name}
+                        {user.phone_number}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button
-                          className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
+                          className="hover:text-primary bg-green-400 hover:bg-slate-100 rounded-full p-1"
                           id="mark-button"
                         >
-                          <IoMdCheckmark size={20} />
+                          <IoMdCheckmark size={20} className='text-white'/>
                         </button>
                         <button
-                          className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
+                          className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
                           id="cross-button"
                         >
-                          <RxCross2 size={20} />
+                          <RxCross2 size={20} className='text-white'/>
                         </button>
                         <button
                           className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
                           id="view-button"
-                          onClick={() => viewHandler(community)}
+                          onClick={() => viewHandler(user)}
                         >
                           <SlEye size={20} />
                         </button>
@@ -163,4 +147,4 @@ const ApproveCommunities: React.FC = () => {
   );
 };
 
-export default ApproveCommunities;
+export default PendingUsersComp;
