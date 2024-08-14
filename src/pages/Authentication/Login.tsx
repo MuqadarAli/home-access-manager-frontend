@@ -15,8 +15,8 @@ const Login: React.FC = () => {
             <div className="hidden  px-10 xl:block xl:w-1/2">
               <div className="py-17.5 px-26 text-center">
                 <div className="mb-5.5 inline-block" >
-                  <img className="hidden dark:block" src={Logo} alt="Logo" />
-                  <img className="dark:hidden" src={LogoDark} alt="Logo" />
+                  <img className="hidden dark:block w-20 h-20 md:w-40 md:h-40" src={Logo} alt="Logo" />
+                  <img className="dark:hidden h-20 w-20 md:w-40 md:h-40" src={LogoDark} alt="Logo" />
                 </div>
 
                 <span className="mt-15 inline-block">
@@ -147,7 +147,7 @@ const Login: React.FC = () => {
             <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
               <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
                 <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                  Login
+                  Community Admin Login
                 </h2>
 
                 <form>

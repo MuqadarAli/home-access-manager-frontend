@@ -1,87 +1,52 @@
 import React from 'react';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 // import { IoMdCheckmark } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
-import { SlEye } from 'react-icons/sl';
-import {  useNavigate } from 'react-router-dom';
 
-const communities = [
-  {
-    name: 'Green Valley Community',
-    communityType: 'Residential',
-    description: 'A peaceful residential community surrounded by nature.',
-    address: '123 Green Valley Rd',
-    area: 'Green Valley',
-    zip_code: '12345',
-    admin: {
-      name: 'John Doe',
-      email: 'johndoe@greenvalley.com',
-      phone: '555-123-4567',
+const airbnbs = [
+    {
+      id: 1,
+      first_name: "Emily",
+      last_name: "Watson",
+      from_date: "2024-08-10",
+      to_date: "2024-08-15"
     },
-  },
-  {
-    name: 'Tech Hub Community',
-    communityType: 'Commercial',
-    description: 'A vibrant tech community with state-of-the-art facilities.',
-    address: '456 Tech Park Ave',
-    area: 'Tech District',
-    zip_code: '67890',
-    admin: {
-      name: 'Jane Smith',
-      email: 'janesmith@techhub.com',
-      phone: '555-987-6543',
+    {
+      id: 2,
+      first_name: "Michael",
+      last_name: "Brown",
+      from_date: "2024-09-01",
+      to_date: "2024-09-05"
     },
-  },
-  {
-    name: 'Cultural Arts Community',
-    communityType: 'Cultural',
-    description: 'A community focused on promoting arts and culture.',
-    address: '789 Arts Center Blvd',
-    area: 'Cultural Arts',
-    zip_code: '11223',
-    admin: {
-      name: 'Emily Johnson',
-      email: 'emilyjohnson@culturalarts.com',
-      phone: '555-234-5678',
+    {
+      id: 3,
+      first_name: "Sophia",
+      last_name: "Davis",
+      from_date: "2024-10-12",
+      to_date: "2024-10-20"
     },
-  },
-  {
-    name: 'Fitness and Wellness Community',
-    communityType: 'Recreational',
-    description: 'A community dedicated to fitness and wellness activities.',
-    address: '321 Wellness Way',
-    area: 'Health District',
-    zip_code: '33445',
-    admin: {
-      name: 'Michael Brown',
-      email: 'michaelbrown@wellnesscommunity.com',
-      phone: '555-345-6789',
+    {
+      id: 4,
+      first_name: "James",
+      last_name: "Taylor",
+      from_date: "2024-11-22",
+      to_date: "2024-11-28"
     },
-  },
-  {
-    name: 'Eco-Friendly Community',
-    communityType: 'Sustainable',
-    description: 'A community committed to sustainable living practices.',
-    address: '654 Eco Lane',
-    area: 'Green Zone',
-    zip_code: '55667',
-    admin: {
-      name: 'Olivia Wilson',
-      email: 'oliviawilson@ecofriendly.com',
-      phone: '555-456-7890',
-    },
-  },
-];
+    {
+      id: 5,
+      first_name: "Olivia",
+      last_name: "Martinez",
+      from_date: "2024-12-05",
+      to_date: "2024-12-12"
+    }
+  ];
+   
 
-const ApprovedCommunities: React.FC = () => {
-  const navigate = useNavigate();
+const ApprovedAirbnbComp: React.FC = () => {
 
-  const viewHandler = (community:any) => {
-    navigate('/communities/community-detail', {state: {community}});
-  };
   return (
     <>
-      <Breadcrumb pageName="Approved Communities" />
+      <Breadcrumb pageName="Approved Airbnb" />
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -90,16 +55,16 @@ const ApprovedCommunities: React.FC = () => {
               <thead>
                 <tr className="bg-gray-2 text-left dark:bg-meta-4">
                   <th className="min-w-[220px]  py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                    Name
+                    First Name
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
-                    Community Type
+                    Last Name
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    Area
+                    From Date
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    Admin
+                    To Date
                   </th>
                   <th className="py-4 px-4 font-medium text-black dark:text-white">
                     Actions
@@ -107,26 +72,26 @@ const ApprovedCommunities: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {communities.map((community, key) => (
+                {airbnbs?.map((airbnb, key) => (
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="font-medium text-black dark:text-white">
-                        {community.name}
+                        {airbnb.first_name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.area}
+                        {airbnb.last_name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.communityType}
+                        {airbnb.from_date}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.admin.name}
+                        {airbnb.to_date}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -138,13 +103,7 @@ const ApprovedCommunities: React.FC = () => {
                         >
                           <RxCross2 size={20} className='text-white'/>
                         </button>
-                        <button
-                          className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
-                          id="view-button"
-                          onClick={() => viewHandler(community)}
-                        >
-                          <SlEye size={20} />
-                        </button>
+                       
                       </div>
                     </td>
                   </tr>
@@ -158,4 +117,4 @@ const ApprovedCommunities: React.FC = () => {
   );
 };
 
-export default ApprovedCommunities;
+export default ApprovedAirbnbComp;

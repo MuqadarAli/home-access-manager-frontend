@@ -26,6 +26,11 @@ import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import { PendingUsers } from './pages/Users/PendingUsers';
 import { UserDetail } from './pages/Users/UserDetail';
 import { ApprovedUsers } from './pages/Users/ApprovedUsers';
+import { PendingVisitors } from './pages/VisitorsAirbnb/VisitorsPending';
+import { VisitorDetail } from './pages/VisitorsAirbnb/VisitorDetail';
+import { ApprovedVisitors } from './pages/VisitorsAirbnb/ApprovedVisitor';
+import { PendingAirbnb } from './pages/VisitorsAirbnb/PendingAirbnb';
+import { ApprovedAirbnb } from './pages/VisitorsAirbnb/ApprovedAirbnb';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -119,6 +124,11 @@ function App() {
       <Route path="users/pending-users" element={<PendingUsers />} />
       <Route path="users/user-detail" element={<UserDetail />} />
       <Route path="users/approved-users" element={<ApprovedUsers />} />
+      <Route path="/visitors-airbnb/pending-visitors" element={<PendingVisitors />} />
+      <Route path="/visitors-airbnb/visitor-detail" element={<VisitorDetail />} />
+      <Route path="/visitors-airbnb/approved-visitors" element={<ApprovedVisitors />} />
+      <Route path="/visitors-airbnb/pending-airbnb" element={<PendingAirbnb />} />
+      <Route path="/visitors-airbnb/approved-airbnb" element={<ApprovedAirbnb />} />
       <Route
         path="/calendar"
         element={
@@ -167,10 +177,10 @@ function App() {
       <Route
         path="/profile"
         element={
-          <DefaultLayout>
+          <AdminLayout>
             <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
             <ProfileDetail />
-          </DefaultLayout>
+          </AdminLayout>
         }
       />
       <Route
