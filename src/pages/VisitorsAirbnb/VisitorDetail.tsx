@@ -6,7 +6,7 @@ import VisitorDetailComp from '../../components/VisitorAirbnbComp/VisitorDetailC
 export const VisitorDetail: React.FC = () => {
   return (
     <AdminLayout>
-      <PageTitle title="Visitor Detail | Remote Access Manager" />
+      <PageTitle title="Visitor Detail | Home Access Manager" />
       <VisitorDetailComp />
     </AdminLayout>
   );

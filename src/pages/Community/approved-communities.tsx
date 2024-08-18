@@ -1,88 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 // import { IoMdCheckmark } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
-import {  useNavigate } from 'react-router-dom';
-
-const communities = [
-  {
-    name: 'Green Valley Community',
-    communityType: 'Residential',
-    description: 'A peaceful residential community surrounded by nature.',
-    address: '123 Green Valley Rd',
-    area: 'Green Valley',
-    zip_code: '12345',
-    admin: {
-      name: 'John Doe',
-      email: 'johndoe@greenvalley.com',
-      phone: '555-123-4567',
-    },
-  },
-  {
-    name: 'Tech Hub Community',
-    communityType: 'Commercial',
-    description: 'A vibrant tech community with state-of-the-art facilities.',
-    address: '456 Tech Park Ave',
-    area: 'Tech District',
-    zip_code: '67890',
-    admin: {
-      name: 'Jane Smith',
-      email: 'janesmith@techhub.com',
-      phone: '555-987-6543',
-    },
-  },
-  {
-    name: 'Cultural Arts Community',
-    communityType: 'Cultural',
-    description: 'A community focused on promoting arts and culture.',
-    address: '789 Arts Center Blvd',
-    area: 'Cultural Arts',
-    zip_code: '11223',
-    admin: {
-      name: 'Emily Johnson',
-      email: 'emilyjohnson@culturalarts.com',
-      phone: '555-234-5678',
-    },
-  },
-  {
-    name: 'Fitness and Wellness Community',
-    communityType: 'Recreational',
-    description: 'A community dedicated to fitness and wellness activities.',
-    address: '321 Wellness Way',
-    area: 'Health District',
-    zip_code: '33445',
-    admin: {
-      name: 'Michael Brown',
-      email: 'michaelbrown@wellnesscommunity.com',
-      phone: '555-345-6789',
-    },
-  },
-  {
-    name: 'Eco-Friendly Community',
-    communityType: 'Sustainable',
-    description: 'A community committed to sustainable living practices.',
-    address: '654 Eco Lane',
-    area: 'Green Zone',
-    zip_code: '55667',
-    admin: {
-      name: 'Olivia Wilson',
-      email: 'oliviawilson@ecofriendly.com',
-      phone: '555-456-7890',
-    },
-  },
-];
+import { useNavigate } from 'react-router-dom';
+import { useGetApprovedCommunityQuery } from '../../redux/rtk-query/community';
+import Loader from '../../components/Loader';
+import { DisableModal } from '../../components/Modal/DisableModal';
 
 const ApprovedCommunities: React.FC = () => {
+  const [disableModal, setDisableModal] = useState<boolean>(false);
+  const [currentId, setCurrentId] = useState<string>('');
   const navigate = useNavigate();
+  const {
+    data: communities,
+    isError,
+    isLoading,
+  } = useGetApprovedCommunityQuery(undefined);
 
-  const viewHandler = (community:any) => {
-    navigate('/communities/community-detail', {state: {community}});
+  const viewHandler = (community: any) => {
+    navigate('/communities/community-detail', { state: { community } });
   };
+
+  function disableHandler(id: any) {
+    setDisableModal(!disableModal);
+    setCurrentId(id);
+  }
   return (
     <>
       <Breadcrumb pageName="Approved Communities" />
-
+      <div>{isLoading && <Loader />}</div>
+      <div>
+        {isError && (
+          <p className="text-lg leading-6 font-medium text-red-500">
+            System Failed
+          </p>
+        )}
+      </div>
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <div className="max-w-full overflow-x-auto">
@@ -96,7 +50,7 @@ const ApprovedCommunities: React.FC = () => {
                     Community Type
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    Area
+                    City
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                     Admin
@@ -107,36 +61,38 @@ const ApprovedCommunities: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {communities.map((community, key) => (
+                {communities?.value?.map((community: any, key: number) => (
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                       <p className="font-medium text-black dark:text-white">
-                        {community.name}
+                        {community?.name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.area}
+                        {community?.community_type?.name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.communityType}
+                        {community.city}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community.admin.name}
+                        {community?.admin?.full_name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
-                        
                         <button
                           className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
                           id="cross-button"
+                          onClick={() => {
+                            disableHandler(community?.id);
+                          }}
                         >
-                          <RxCross2 size={20} className='text-white'/>
+                          <RxCross2 size={20} className="text-white" />
                         </button>
                         <button
                           className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
@@ -153,6 +109,13 @@ const ApprovedCommunities: React.FC = () => {
             </table>
           </div>
         </div>
+        {disableModal && (
+          <DisableModal
+            name="Community"
+            setModal={setDisableModal}
+            id={currentId}
+          />
+        )}
       </div>
     </>
   );

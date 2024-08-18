@@ -6,7 +6,7 @@ import PendingUsersComp from '../../components/UsersComp/PendingUsersComp';
 export const PendingUsers: React.FC = () => {
   return (
     <AdminLayout>
-      <PageTitle title="Pending Users | Remote Access Manager" />
+      <PageTitle title="Pending Users | Home Access Manager" />
       <PendingUsersComp />
     </AdminLayout>
   );

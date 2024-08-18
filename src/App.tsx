@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
-import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SuperAdminLogin';
 import SignUp from './pages/Authentication/SignUp';
@@ -44,16 +43,14 @@ function App() {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     // <DefaultLayout>
     <Routes>
       <Route
         path="/"
         element={
           <>
-            <PageTitle title="Login | Remote Access Manager" />
+            <PageTitle title="Login | Home Access Manager" />
             <Login />
           </>
         }
@@ -62,7 +59,7 @@ function App() {
         path="/login"
         element={
           <>
-            <PageTitle title="Login | Remote Access Manager" />
+            <PageTitle title="Login | Home Access Manager" />
             <SuperAdminLogin />
           </>
         }
@@ -71,7 +68,7 @@ function App() {
         path="/super-admin/dashboard"
         element={
           <DefaultLayout>
-            <PageTitle title="Dashboard | Remote Access Manager" />
+            <PageTitle title="Dashboard | Home Access Manager" />
             <Dashboard />
           </DefaultLayout>
         }
@@ -80,7 +77,7 @@ function App() {
         path="/dashboard"
         element={
           <AdminLayout>
-            <PageTitle title="Dashboard | Remote Access Manager" />
+            <PageTitle title="Dashboard | Home Access Manager" />
             <AdminDashboard />
           </AdminLayout>
         }
@@ -89,7 +86,7 @@ function App() {
         path="/communities/pending-communities"
         element={
           <DefaultLayout>
-            <PageTitle title="Community | Remote Access Manager" />
+            <PageTitle title="Community | Home Access Manager" />
             <PendingCommunities />
           </DefaultLayout>
         }
@@ -98,7 +95,7 @@ function App() {
         path="/communities/approved-communities"
         element={
           <DefaultLayout>
-            <PageTitle title="Community | Remote Access Manager" />
+            <PageTitle title="Community | Home Access Manager" />
             <ApprovedCommunities />
           </DefaultLayout>
         }
@@ -107,7 +104,7 @@ function App() {
         path="/communities/community-detail"
         element={
           <DefaultLayout>
-            <PageTitle title="Community Detail| Remote Access Manager" />
+            <PageTitle title="Community Detail| Home Access Manager" />
             <CommunityDetail />
           </DefaultLayout>
         }
@@ -116,7 +113,7 @@ function App() {
         path="/communities/add-community"
         element={
           <DefaultLayout>
-            <PageTitle title="Add Community | Remote Access Manager" />
+            <PageTitle title="Add Community | Home Access Manager" />
             <AddCommunity />
           </DefaultLayout>
         }
@@ -124,11 +121,26 @@ function App() {
       <Route path="users/pending-users" element={<PendingUsers />} />
       <Route path="users/user-detail" element={<UserDetail />} />
       <Route path="users/approved-users" element={<ApprovedUsers />} />
-      <Route path="/visitors-airbnb/pending-visitors" element={<PendingVisitors />} />
-      <Route path="/visitors-airbnb/visitor-detail" element={<VisitorDetail />} />
-      <Route path="/visitors-airbnb/approved-visitors" element={<ApprovedVisitors />} />
-      <Route path="/visitors-airbnb/pending-airbnb" element={<PendingAirbnb />} />
-      <Route path="/visitors-airbnb/approved-airbnb" element={<ApprovedAirbnb />} />
+      <Route
+        path="/visitors-airbnb/pending-visitors"
+        element={<PendingVisitors />}
+      />
+      <Route
+        path="/visitors-airbnb/visitor-detail"
+        element={<VisitorDetail />}
+      />
+      <Route
+        path="/visitors-airbnb/approved-visitors"
+        element={<ApprovedVisitors />}
+      />
+      <Route
+        path="/visitors-airbnb/pending-airbnb"
+        element={<PendingAirbnb />}
+      />
+      <Route
+        path="/visitors-airbnb/approved-airbnb"
+        element={<ApprovedAirbnb />}
+      />
       <Route
         path="/calendar"
         element={

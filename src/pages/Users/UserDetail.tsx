@@ -6,7 +6,7 @@ import UserDetailComp from '../../components/UsersComp/UserDetailComp';
 export const UserDetail: React.FC = () => {
   return (
     <AdminLayout>
-      <PageTitle title="Users Detail | Remote Access Manager" />
+      <PageTitle title="Users Detail | Home Access Manager" />
       <UserDetailComp />
     </AdminLayout>
   );

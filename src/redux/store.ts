@@ -58,7 +58,7 @@ import { communityApi } from "./rtk-query/community";
       }).concat(authApi.middleware, communityApi.middleware),
   });
   
-  export const persistor = persistStore(store);
+  export const persister = persistStore(store);
   
   export type RootState = ReturnType<typeof store.getState>;
   export type AppDispatch = typeof store.dispatch;

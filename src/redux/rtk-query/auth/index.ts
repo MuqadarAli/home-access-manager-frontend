@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const baseUrl =
-  process.env.ENV === 'development' ? process.env.DEV_URL : process.env.PRO_URL;
+// const baseUrl = import.meta.env.VITE_ENV === 'development' 
+//   ? import.meta.env.VITE_DEV_URL 
+//   : import.meta.env.VITE_PRO_URL;
+const baseUrl = 'http://localhost:3000'
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
@@ -30,13 +32,7 @@ export const authApi = createApi({
         headers: { Authorization: `Bearer ${token}` },
       }),
     }),
-    communityRegistration: builder.mutation({
-      query: (body) => ({
-        url: 'register-community',
-        method: 'POST',
-        body: body,
-      }),
-    }),
+
   }),
 });
 
@@ -44,5 +40,4 @@ export const {
   useSuperAdminLoginMutation,
   useAdminLoginMutation,
   useVerifyTokenMutation,
-  useCommunityRegistrationMutation,
 } = authApi;

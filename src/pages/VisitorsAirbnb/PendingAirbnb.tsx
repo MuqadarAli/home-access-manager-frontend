@@ -6,7 +6,7 @@ import PendingAirbnbComp from '../../components/VisitorAirbnbComp/PendingAirbnbC
 export const PendingAirbnb: React.FC = () => {
   return (
     <AdminLayout>
-      <PageTitle title="Pending Airbnb | Remote Access Manager" />
+      <PageTitle title="Pending Airbnb | Home Access Manager" />
       <PendingAirbnbComp />
     </AdminLayout>
   );

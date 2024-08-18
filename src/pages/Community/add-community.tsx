@@ -1,24 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import {
+  useCommunityRegistrationMutation,
+  useGetCommunityTypeQuery,
+} from '../../redux/rtk-query/community';
+import Loader from '../../components/Loader';
+import { useForm } from 'react-hook-form';
+import SuccessAlert from '../../components/Alert/SuccessAlert';
+import SuccessMessage from '../../components/Alert/SuccessMessage';
+import ErrorMessage from '../../components/Alert/ErrorMessage';
 
-const communityTypes: any = [
-  { id: 1, name: 'Social Community' },
-  { id: 2, name: 'Professional Community' },
-  { id: 3, name: 'Cultural Community' },
-  { id: 4, name: 'Educational Community' },
-  { id: 5, name: 'Health and Wellness Community' },
-  { id: 6, name: 'Environmental Community' },
-  { id: 7, name: 'Sports Community' },
-  { id: 8, name: 'Arts Community' },
-  { id: 9, name: 'Religious Community' },
-  { id: 10, name: 'Volunteer Community' },
-];
+type AddCommunityType = {
+  name: string;
+  communityType_id: string;
+  address: string;
+  city: string;
+  zip_code: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  description: string;
+};
 
 const AddCommunity: React.FC = () => {
+  const [addError, setAddError] = useState<string | null>(null);
+  const [addSuccess, setAddSuccess] = useState<string | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
+  const {
+    data: communityTypes,
+    isError,
+    isLoading,
+  } = useGetCommunityTypeQuery(undefined);
+
+  const [
+    addCommunity,
+    { isSuccess: communitySuccess, isLoading: communityLoading },
+  ] = useCommunityRegistrationMutation();
+
+  const {
+    handleSubmit,
+    reset,
+    register,
+    formState: { errors },
+  } = useForm<AddCommunityType>();
+
+  const onSubmit: any = async (data: any) => {
+    try {
+      const response = await addCommunity(data).unwrap();
+      if (response?.statusCode == 201) {
+        setAddSuccess(response?.message);
+        setShowSuccessMessage(true);
+        reset();
+      } else {
+        setAddError(response?.message);
+        setShowErrorMessage(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <Breadcrumb pageName="Add Community" />
-
+      <div>{isLoading && <Loader />}</div>
+      <div>
+        {isError && (
+          <p className="text-lg leading-6 font-medium text-red-500">
+            System Failed
+          </p>
+        )}
+      </div>
       <div className="">
         <div className="flex flex-col gap-9">
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -27,30 +79,51 @@ const AddCommunity: React.FC = () => {
                 Community Form
               </h3>
             </div>
-            <form action="#">
+            <form method="post" onSubmit={handleSubmit(onSubmit)}>
               <div className="p-6.5">
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 text-base block text-black dark:text-white">
+                    <label
+                      htmlFor="name"
+                      className="mb-2.5 text-base block text-black dark:text-white"
+                    >
                       Community name <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="text"
+                      id="name"
+                      {...register('name', {
+                        required: 'This field is required',
+                        pattern: {
+                          value: /^(?! )[a-zA-Z\s]{1,40}(?<! )$/,
+                          message:
+                            'The name must be no longer than 40 characters.',
+                        },
+                      })}
                       placeholder="Enter community name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
+                    {errors?.name && (
+                      <p className="text-red-500">{errors?.name?.message}</p>
+                    )}
                   </div>
 
                   <div className="w-full xl:w-1/2">
                     <div>
-                      <label className="mb-3 text-base block text-black dark:text-white">
+                      <label
+                        htmlFor="community_type"
+                        className="mb-3 text-base block text-black dark:text-white"
+                      >
                         Select Country <span className="text-meta-1">*</span>
                       </label>
 
                       <div className="relative z-20 bg-white dark:bg-form-input">
                         <select
                           className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input ${'text-black dark:text-white'}`}
-                          placeholder="Select community type"
+                          id="community_type"
+                          {...register('communityType_id', {
+                            required: 'This field is required',
+                          })}
                         >
                           <option
                             value=""
@@ -59,7 +132,7 @@ const AddCommunity: React.FC = () => {
                           >
                             Select community type
                           </option>
-                          {communityTypes.map((communityType: any) => (
+                          {communityTypes?.value.map((communityType: any) => (
                             <option
                               value={communityType?.id}
                               key={communityType?.id}
@@ -89,97 +162,228 @@ const AddCommunity: React.FC = () => {
                           </svg>
                         </span>
                       </div>
+                      {errors?.communityType_id && (
+                        <p className="text-red-500">
+                          {errors?.communityType_id?.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
 
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 text-base block text-black dark:text-white">
+                    <label
+                      htmlFor="address"
+                      className="mb-2.5 text-base block text-black dark:text-white"
+                    >
                       Address <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="text"
+                      id="address"
+                      {...register('address', {
+                        required: 'This field is required',
+                        maxLength: {
+                          value: 1000,
+                          message:
+                            'The address must be no longer than 1000 characters.',
+                        },
+                      })}
                       placeholder="Enter address"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
+                    {errors?.address && (
+                      <p className="text-red-500">{errors?.address?.message}</p>
+                    )}
                   </div>
                   <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 text-base block text-black dark:text-white">
-                      Area <span className="text-meta-1">*</span>
+                    <label
+                      htmlFor="city"
+                      className="mb-2.5 text-base block text-black dark:text-white"
+                    >
+                      City <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="Enter area"
+                      id="city"
+                      {...register('city', {
+                        required: 'This field is required',
+                        maxLength: {
+                          value: 1000,
+                          message:
+                            'The city must be no longer than 1000 characters.',
+                        },
+                      })}
+                      placeholder="Enter city"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
+                    {errors?.city && (
+                      <p className="text-red-500">{errors?.email?.message}</p>
+                    )}
                   </div>
                 </div>
 
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 text-base block text-black dark:text-white">
+                    <label
+                      htmlFor="zip_code"
+                      className="mb-2.5 text-base block text-black dark:text-white"
+                    >
                       Zip Code <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="text"
+                      id="zip_code"
+                      {...register('zip_code', {
+                        required: 'This field is required',
+                        maxLength: {
+                          value: 100,
+                          message:
+                            'The zip code must be no longer than 100 characters.',
+                        },
+                      })}
                       placeholder="Enter zip code"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
+                    {errors?.zip_code && (
+                      <p className="text-red-500">
+                        {errors?.zip_code?.message}
+                      </p>
+                    )}
                   </div>
                   <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 text-base block text-black dark:text-white">
-                      Admin Name <span className="text-meta-1">*</span>
+                    <label
+                      htmlFor="full_name"
+                      className="mb-2.5 text-base block text-black dark:text-white"
+                    >
+                      Admin Full Name <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="Enter admin name"
+                      id="full_name"
+                      {...register('full_name', {
+                        required: 'This field is required',
+                        maxLength: {
+                          value: 20,
+                          message:
+                            'The full name of the admin must be no longer than 100 characters.',
+                        },
+                      })}
+                      placeholder="Enter admin full name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
+                    {errors?.full_name && (
+                      <p className="text-red-500">
+                        {errors?.full_name?.message}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 text-base block text-black dark:text-white">
+                    <label
+                      htmlFor="email"
+                      className="mb-2.5 text-base block text-black dark:text-white"
+                    >
                       Email Address <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="text"
+                      id="email"
+                      {...register('email', {
+                        required: 'This field is required',
+                        pattern: {
+                          value:
+                            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                          message: 'Invalid email formate',
+                        },
+                      })}
                       placeholder="Enter email address"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
+                    {errors?.email && (
+                      <p className="text-red-500">{errors?.email?.message}</p>
+                    )}
                   </div>
                   <div className="w-full xl:w-1/2">
-                    <label className="mb-2.5 text-base block text-black dark:text-white">
+                    <label
+                      htmlFor="phone_number"
+                      className="mb-2.5 text-base block text-black dark:text-white"
+                    >
                       Phone Number <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="text"
+                      id="phone_number"
+                      {...register('phone', {
+                        required: 'This field is required',
+                        pattern: {
+                          value:
+                            /^\+?(\d{1,3})?[-]?(\(\d{3}\))?[-]?(\d{3})[-]?(\d{4})$/,
+                          message: 'Invalid phone number formate',
+                        },
+                      })}
                       placeholder="Enter phone number"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
+                    {errors?.phone && (
+                      <p className="text-red-500">{errors?.phone?.message}</p>
+                    )}
                   </div>
                 </div>
 
                 {/* <SelectGroupOne /> */}
 
                 <div className="mb-6">
-                  <label className="mb-2.5 text-base block text-black dark:text-white">
+                  <label
+                    htmlFor="description"
+                    className="mb-2.5 text-base block text-black dark:text-white"
+                  >
                     Description <span className="text-meta-1">*</span>
                   </label>
                   <textarea
                     rows={6}
+                    id="description"
+                    {...register('description', {
+                      required: 'This field is required',
+                      maxLength: {
+                        value: 1000,
+                        message:
+                          'The description must be no longer than 1000 characters.',
+                      },
+                    })}
                     placeholder="Enter description"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   ></textarea>
+                  {errors?.description && (
+                    <p className="text-red-500">
+                      {errors?.description?.message}
+                    </p>
+                  )}
                 </div>
-                <div className='flex justify-end w-full'>
-                  <button className="flex w-1/5 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
-                    Add
+                <div className="flex justify-end w-full">
+                  <button
+                    type="submit"
+                    className="flex w-1/5 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+                  >
+                    {!communityLoading ? 'Add' : <Loader />}
                   </button>
                 </div>
               </div>
             </form>
+            {communitySuccess && showSuccessMessage && addSuccess && (
+              <SuccessMessage
+                message={addSuccess}
+                setShowMessage={setShowSuccessMessage}
+              />
+            )}
+            {addError && showErrorMessage && (
+              <ErrorMessage
+                message={addError}
+                setShowMessage={setShowErrorMessage}
+              />
+            )}
           </div>
         </div>
       </div>

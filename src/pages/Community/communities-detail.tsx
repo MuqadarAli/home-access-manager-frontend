@@ -26,15 +26,15 @@ const CommunityDetail: React.FC = () => {
                 Community Type
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {communityData?.communityType}
+                {communityData?.community_type?.name}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Area
+                City
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-              {communityData?.area}
+              {communityData?.city}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -63,10 +63,10 @@ const CommunityDetail: React.FC = () => {
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
               <h3 className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Admin Name
+                Admin Full Name
               </h3>
               <p className="mt-1 max-w-2xl text-lg leading-7 font-normal text-black dark:text-white">
-                {communityData?.admin?.name}
+                {communityData?.admin?.full_name}
               </p>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">

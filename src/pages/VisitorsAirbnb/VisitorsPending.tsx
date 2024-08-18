@@ -6,7 +6,7 @@ import PendingVisitorsComp from '../../components/VisitorAirbnbComp/PendingVisit
 export const PendingVisitors: React.FC = () => {
   return (
     <AdminLayout>
-      <PageTitle title="Pending Visitors | Remote Access Manager" />
+      <PageTitle title="Pending Visitors | Home Access Manager" />
       <PendingVisitorsComp />
     </AdminLayout>
   );

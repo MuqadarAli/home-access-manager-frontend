@@ -6,7 +6,7 @@ import ApprovedUsersComp from '../../components/UsersComp/ApprovedUsersComp';
 export const ApprovedUsers: React.FC = () => {
   return (
     <AdminLayout>
-      <PageTitle title="Approved Users | Remote Access Manager" />
+      <PageTitle title="Approved Users | Home Access Manager" />
       <ApprovedUsersComp />
     </AdminLayout>
   );
