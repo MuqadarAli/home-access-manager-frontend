@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 
 import PageTitle from './components/PageTitle';
@@ -30,18 +30,22 @@ import { VisitorDetail } from './pages/VisitorsAirbnb/VisitorDetail';
 import { ApprovedVisitors } from './pages/VisitorsAirbnb/ApprovedVisitor';
 import { PendingAirbnb } from './pages/VisitorsAirbnb/PendingAirbnb';
 import { ApprovedAirbnb } from './pages/VisitorsAirbnb/ApprovedAirbnb';
+import { IsAuth } from './components/IsAuth';
+import { SuperAdminChangePass } from './pages/ChangePassword';
+import { AdminChangePass } from './pages/ChangePassword/AdminChangePass';
+import AdminProfile from './pages/AdminProfile';
 
 function App() {
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => setLoading(false), 1000);
+  // }, []);
 
   return (
     // <DefaultLayout>
@@ -67,55 +71,83 @@ function App() {
       <Route
         path="/super-admin/dashboard"
         element={
-          <DefaultLayout>
-            <PageTitle title="Dashboard | Home Access Manager" />
-            <Dashboard />
-          </DefaultLayout>
+          <IsAuth>
+            <DefaultLayout>
+              <PageTitle title="Dashboard | Home Access Manager" />
+              <Dashboard />
+            </DefaultLayout>
+          </IsAuth>
         }
       />
       <Route
         path="/dashboard"
         element={
-          <AdminLayout>
-            <PageTitle title="Dashboard | Home Access Manager" />
-            <AdminDashboard />
-          </AdminLayout>
+          <IsAuth>
+            <AdminLayout>
+              <PageTitle title="Dashboard | Home Access Manager" />
+              <AdminDashboard />
+            </AdminLayout>
+          </IsAuth>
         }
       />
       <Route
         path="/communities/pending-communities"
         element={
-          <DefaultLayout>
-            <PageTitle title="Community | Home Access Manager" />
-            <PendingCommunities />
-          </DefaultLayout>
+          <IsAuth>
+            <DefaultLayout>
+              <PageTitle title="Community | Home Access Manager" />
+              <PendingCommunities />
+            </DefaultLayout>
+          </IsAuth>
         }
       />
       <Route
         path="/communities/approved-communities"
         element={
-          <DefaultLayout>
-            <PageTitle title="Community | Home Access Manager" />
-            <ApprovedCommunities />
-          </DefaultLayout>
+          <IsAuth>
+            <DefaultLayout>
+              <PageTitle title="Community | Home Access Manager" />
+              <ApprovedCommunities />
+            </DefaultLayout>
+          </IsAuth>
         }
       />
       <Route
         path="/communities/community-detail"
         element={
-          <DefaultLayout>
-            <PageTitle title="Community Detail| Home Access Manager" />
-            <CommunityDetail />
-          </DefaultLayout>
+          <IsAuth>
+            <DefaultLayout>
+              <PageTitle title="Community Detail| Home Access Manager" />
+              <CommunityDetail />
+            </DefaultLayout>
+          </IsAuth>
         }
       />
       <Route
         path="/communities/add-community"
         element={
-          <DefaultLayout>
-            <PageTitle title="Add Community | Home Access Manager" />
-            <AddCommunity />
-          </DefaultLayout>
+          <IsAuth>
+            <DefaultLayout>
+              <PageTitle title="Add Community | Home Access Manager" />
+              <AddCommunity />
+            </DefaultLayout>
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/super-admin/change-password"
+        element={
+          <IsAuth>
+            <SuperAdminChangePass />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/change-password"
+        element={
+          <IsAuth>
+            <AdminChangePass />
+          </IsAuth>
         }
       />
       <Route path="users/pending-users" element={<PendingUsers />} />
@@ -187,19 +219,32 @@ function App() {
         }
       />
       <Route
+        path="/super-admin/profile"
+        element={
+          <IsAuth>
+            <DefaultLayout>
+              <PageTitle title="Profile | Home Access Manager" />
+              <ProfileDetail />
+            </DefaultLayout>
+          </IsAuth>
+        }
+      />
+      <Route
         path="/profile"
         element={
-          <AdminLayout>
-            <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-            <ProfileDetail />
-          </AdminLayout>
+          <IsAuth>
+            <AdminLayout>
+              <PageTitle title="Profile | Home Access Manager" />
+              <AdminProfile />
+            </AdminLayout>
+          </IsAuth>
         }
       />
       <Route
         path="/chart"
         element={
           <>
-            <PageTitle title="Basic Chart | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+            <PageTitle title="Basic Chart |  Home Access Manager" />
             <Chart />
           </>
         }

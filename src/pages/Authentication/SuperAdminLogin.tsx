@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo.png';
 import Logo from '../../images/logo.png';
 import { useSuperAdminLoginMutation } from '../../redux/rtk-query/auth';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated, setToken } from '../../redux/slice/auth';
 import  Loader  from '../../components/Loader';
+import { RootState } from '../../redux/store';
 
 const SuperAdminLogin: React.FC = () => {
   const navigate = useNavigate();
@@ -40,13 +41,13 @@ const SuperAdminLogin: React.FC = () => {
     }
   };
 
-  // const isAuthenticated = useSelector(
-  //   (state: RootState) => state.persistedReducer.auth.isAuthenticated
-  // );
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.persistedReducer.auth.isAuthenticated
+  );
 
-  // if (isAuthenticated) {
-  //   return <Navigate to="/dashboard" replace />;
-  // }
+  if (isAuthenticated) {
+    return <Navigate to="/super-admin/dashboard" replace />;
+  }
   return (
     <>
       {/* <Breadcrumb pageName="Admin" /> */}

@@ -4,6 +4,7 @@ import Loader from '../Loader';
 import { useCommunityApprovalMutation } from '../../redux/rtk-query/community';
 import SuccessAlert from '../Alert/SuccessAlert';
 import ErrorAlert from '../Alert/ErrorAlert';
+import { useUserApprovalByAdminMutation } from '../../redux/rtk-query/user';
 
 type approveModalType = {
   id: string;
@@ -16,6 +17,10 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
   const cancelButtonRef = useRef(null);
   const [approveCommunity, { isError, isLoading, isSuccess }] =
     useCommunityApprovalMutation();
+  const [
+    userApproval,
+    { isError: userError, isLoading: userLoading, isSuccess: userSuccess },
+  ] = useUserApprovalByAdminMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -27,6 +32,13 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
       switch (name) {
         case 'Community':
           await approveCommunity({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'User':
+          await userApproval({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -89,16 +101,16 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
                     disabled={isLoading}
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
-                    {!isLoading ? 'Approve' : <Loader />}
+                    {!isLoading || !userLoading ? 'Approve' : <Loader />}
                   </button>
                 </div>
-                {isSuccess && (
-                  <div id="community-approval-alert" className='mt-3'>
-                    <SuccessAlert name="Community" action="Approve" />
+                {(isSuccess || userSuccess) && (
+                  <div id="community-approval-alert" className="mt-3">
+                    <SuccessAlert name={name} action="Approve" />
                   </div>
                 )}
-                {isError && (
-                  <div id="error-community-approval-alert" className='mt-3'>
+                {(isError || userError) && (
+                  <div id="error-community-approval-alert" className="mt-3">
                     <ErrorAlert />
                   </div>
                 )}

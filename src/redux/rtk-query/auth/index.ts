@@ -1,14 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// const baseUrl = import.meta.env.VITE_ENV === 'development' 
-//   ? import.meta.env.VITE_DEV_URL 
+// const baseUrl = import.meta.env.VITE_ENV === 'development'
+//   ? import.meta.env.VITE_DEV_URL
 //   : import.meta.env.VITE_PRO_URL;
-const baseUrl = 'http://localhost:3000'
+const baseUrl = 'http://localhost:3000';
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${baseUrl}/auth/`,
   }),
+
 
   endpoints: (builder) => ({
     superAdminLogin: builder.mutation({
@@ -18,13 +19,7 @@ export const authApi = createApi({
         body: body,
       }),
     }),
-    adminLogin: builder.mutation({
-      query: (body) => ({
-        url: 'admin-login',
-        method: 'POST',
-        body: body,
-      }),
-    }),
+
     verifyToken: builder.mutation({
       query: (token) => ({
         url: 'verify-token',
@@ -33,6 +28,37 @@ export const authApi = createApi({
       }),
     }),
 
+    adminLogin: builder.mutation({
+      query: (body) => ({
+        url: 'admin-login',
+        method: 'POST',
+        body: body,
+      }),
+    }),
+
+    superAdminChangePass: builder.mutation({
+      query: (body) => ({
+        url: 'super-admin-change-password',
+        method: 'PATCH',
+        body: body,
+      }),
+    }),
+
+    adminChangePass: builder.mutation({
+      query: (body) => ({
+        url: 'admin-change-password',
+        method: 'PATCH',
+        body: body,
+      }),
+    }),
+
+    superAdminUpdateProfile: builder.mutation({
+      query: (body) => ({
+        url: 'super-admin-update-profile',
+        method: 'PATCH',
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -40,4 +66,7 @@ export const {
   useSuperAdminLoginMutation,
   useAdminLoginMutation,
   useVerifyTokenMutation,
+  useSuperAdminChangePassMutation,
+  useAdminChangePassMutation,
+  useSuperAdminUpdateProfileMutation,
 } = authApi;

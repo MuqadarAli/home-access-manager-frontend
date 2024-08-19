@@ -4,6 +4,7 @@ import Loader from '../Loader';
 import { useCommunityDisableMutation } from '../../redux/rtk-query/community';
 import SuccessAlert from '../Alert/SuccessAlert';
 import ErrorAlert from '../Alert/ErrorAlert';
+import { useUserDisableByAdminMutation } from '../../redux/rtk-query/user';
 
 type disableModalType = {
   id: string;
@@ -14,8 +15,12 @@ type disableModalType = {
 export function DisableModal({ name, setModal, id }: disableModalType) {
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
-  const [approveCommunity, { isError, isLoading, isSuccess }] =
+  const [disableCommunity, { isError, isLoading, isSuccess }] =
     useCommunityDisableMutation();
+  const [
+    disableUser,
+    { isError: userError, isLoading: userLoading, isSuccess: userSuccess },
+  ] = useUserDisableByAdminMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -26,7 +31,14 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
     try {
       switch (name) {
         case 'Community':
-          await approveCommunity({ id }).unwrap();
+          await disableCommunity({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'User':
+          await disableUser({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -86,19 +98,19 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
                   </button>
                   <button
                     onClick={() => approveHandler(id)}
-                    disabled={isLoading}
+                    disabled={isLoading || userLoading}
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
-                    {!isLoading ? 'Disable' : <Loader />}
+                    {!isLoading || !userLoading ? 'Disable' : <Loader />}
                   </button>
                 </div>
-                {isSuccess && (
-                  <div id="community-approval-alert" className='mt-3'>
-                    <SuccessAlert name="Community" action="Disable" />
+                {(isSuccess || userSuccess) && (
+                  <div id="approval-alert" className="mt-3">
+                    <SuccessAlert name={name} action="Disable" />
                   </div>
                 )}
-                {isError && (
-                  <div id="error-community-approval-alert" className='mt-3'>
+                {(isError || userError) && (
+                  <div id="error-approval-alert" className="mt-3">
                     <ErrorAlert />
                   </div>
                 )}

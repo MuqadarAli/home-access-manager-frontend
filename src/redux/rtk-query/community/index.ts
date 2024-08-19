@@ -41,7 +41,7 @@ export const communityApi = createApi({
 
     getPendingCommunity: builder.query({
       query: () => ({
-        url: '/pending-community',
+        url: 'pending-community',
         method: 'GET',
       }),
       providesTags: ['community'],

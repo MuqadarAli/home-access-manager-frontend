@@ -4,11 +4,8 @@ import {
     configureStore,
     createAction,
   } from "@reduxjs/toolkit";
-  
   import { setupListeners } from "@reduxjs/toolkit/query";
   import { authApi } from "./rtk-query/auth";
-
-  
   import {
     persistStore,
     persistReducer,
@@ -22,6 +19,7 @@ import {
   import storage from "redux-persist/lib/storage";
   import authReducer from './slice/auth'
 import { communityApi } from "./rtk-query/community";
+import { userApi } from "./rtk-query/user";
   
   export const resetStoreAction = createAction("RESET_STORE");
   const persistConfig = {
@@ -48,6 +46,7 @@ import { communityApi } from "./rtk-query/community";
     reducer: {
       [authApi.reducerPath]: authApi.reducer,
       [communityApi.reducerPath]: communityApi.reducer,
+      [userApi.reducerPath]: userApi.reducer,
       persistedReducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -55,7 +54,7 @@ import { communityApi } from "./rtk-query/community";
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(authApi.middleware, communityApi.middleware),
+      }).concat(authApi.middleware, communityApi.middleware, userApi.middleware),
   });
   
   export const persister = persistStore(store);
