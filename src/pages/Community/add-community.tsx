@@ -6,7 +6,6 @@ import {
 } from '../../redux/rtk-query/community';
 import Loader from '../../components/Loader';
 import { useForm } from 'react-hook-form';
-import SuccessAlert from '../../components/Alert/SuccessAlert';
 import SuccessMessage from '../../components/Alert/SuccessMessage';
 import ErrorMessage from '../../components/Alert/ErrorMessage';
 
@@ -219,7 +218,7 @@ const AddCommunity: React.FC = () => {
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
                     {errors?.city && (
-                      <p className="text-red-500">{errors?.email?.message}</p>
+                      <p className="text-red-500">{errors?.city?.message}</p>
                     )}
                   </div>
                 </div>
