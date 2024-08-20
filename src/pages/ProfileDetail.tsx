@@ -24,9 +24,9 @@ const ProfileDetail = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      id: profile?.id || "",
-      name: profile?.name || "",
-      email: profile?.email || "",
+      id: profile?.id || '',
+      name: profile?.name || '',
+      email: profile?.email || '',
     },
   });
 
@@ -70,7 +70,11 @@ const ProfileDetail = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form method="post" onSubmit={handleSubmit(onSubmit)}>
+                <form
+                  method="post"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mb-3"
+                >
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label

@@ -1,71 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate } from 'react-router-dom';
-
-const visitors = [
-    {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-      date_of_visit: "2023-08-01",
-      access_method: "walk in",
-      email: "john.doe@example.com",
-      address: "123 Maple Street",
-      purpose_of_visit: "Meeting with HR",
-      image: "path/to/image1.jpg"
-    },
-    {
-      id: 2,
-      first_name: "Jane",
-      last_name: "Smith",
-      date_of_visit: "2023-08-02",
-      access_method: "drive in",
-      email: "jane.smith@example.com",
-      address: "456 Oak Avenue",
-      purpose_of_visit: "Business consultation",
-      image: "path/to/image2.jpg"
-    },
-    {
-      id: 3,
-      first_name: "Alice",
-      last_name: "Johnson",
-      date_of_visit: "2023-08-03",
-      access_method: "walk in",
-      email: "alice.johnson@example.com",
-      address: "789 Pine Road",
-      purpose_of_visit: "Job interview",
-      image: "path/to/image3.jpg"
-    },
-    {
-      id: 4,
-      first_name: "Bob",
-      last_name: "Brown",
-      date_of_visit: "2023-08-04",
-      access_method: "drive in",
-      email: "bob.brown@example.com",
-      address: "101 Spruce Blvd",
-      purpose_of_visit: "Product demonstration",
-      image: "path/to/image4.jpg"
-    }
-  ];
-    
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { useGetApprovedVisitorForCommunityQuery } from '../../redux/rtk-query/visitor';
+import Loader from '../Loader';
+import { DisableModal } from '../Modal/DisableModal';
 
 const ApprovedVisitorsComp: React.FC = () => {
-  const navigate = useNavigate();
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
+  const community_id = profile?.community?.id;
+  const [disableModal, setDisableModal] = useState<boolean>(false);
+  const [currentId, setCurrentId] = useState<string>('');
 
-  const viewHandler = (visitor:any) => {
-    navigate('/visitors-airbnb/visitor-detail', {state: {visitor}});
+  const {
+    data: visitors,
+    isError,
+    isLoading,
+  } = useGetApprovedVisitorForCommunityQuery(community_id);
+
+  const navigate = useNavigate();
+  const viewHandler = (visitor: any) => {
+    navigate('/visitors-airbnb/visitor-detail', { state: { visitor } });
   };
+
+  function disableHandler(id: any) {
+    setDisableModal(!disableModal);
+    setCurrentId(id);
+  }
   return (
     <>
       <Breadcrumb pageName="Approved Visitors" />
-
+      <div>{isLoading && <Loader />}</div>
+      <div>
+        {isError && (
+          <p className="text-lg leading-6 font-medium text-red-500">
+            System Failed
+          </p>
+        )}
+      </div>
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <div className="max-w-full overflow-x-auto">
-            <table className="w-full table-auto">
+            <table className="w-full table-auto mb-5">
               <thead>
                 <tr className="bg-gray-2 text-left dark:bg-meta-4">
                   <th className="min-w-[220px]  py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
@@ -86,10 +67,10 @@ const ApprovedVisitorsComp: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {visitors?.map((visitor, key) => (
+                {visitors?.value?.map((visitor: any, key: number) => (
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                      <p className="font-medium text-black dark:text-white">
+                      <p className=" text-black dark:text-white">
                         {visitor.first_name}
                       </p>
                     </td>
@@ -119,8 +100,9 @@ const ApprovedVisitorsComp: React.FC = () => {
                         <button
                           className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
                           id="cross-button"
+                          onClick={() => disableHandler(visitor?.id)}
                         >
-                          <RxCross2 size={20} className='text-white'/>
+                          <RxCross2 size={20} className="text-white" />
                         </button>
                         <button
                           className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
@@ -137,6 +119,13 @@ const ApprovedVisitorsComp: React.FC = () => {
             </table>
           </div>
         </div>
+        {disableModal && (
+          <DisableModal
+            name="Visitor"
+            setModal={setDisableModal}
+            id={currentId}
+          />
+        )}
       </div>
     </>
   );

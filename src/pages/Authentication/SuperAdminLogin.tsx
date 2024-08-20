@@ -6,13 +6,15 @@ import { useSuperAdminLoginMutation } from '../../redux/rtk-query/auth';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated, setToken } from '../../redux/slice/auth';
-import  Loader  from '../../components/Loader';
+import Loader from '../../components/Loader';
 import { RootState } from '../../redux/store';
+import ErrorMessage from '../../components/Alert/ErrorMessage';
 
 const SuperAdminLogin: React.FC = () => {
   const navigate = useNavigate();
   const [login, { isError, isLoading }] = useSuperAdminLoginMutation();
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string>('');
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
   const dispatch = useDispatch();
   const {
     handleSubmit,
@@ -33,6 +35,7 @@ const SuperAdminLogin: React.FC = () => {
         dispatch(setAuthenticated(true));
         navigate('/super-admin/dashboard');
       } else {
+        setShowErrorMessage(true);
         setLoginError(response?.message);
       }
     } catch (error) {
@@ -42,7 +45,7 @@ const SuperAdminLogin: React.FC = () => {
   };
 
   const isAuthenticated = useSelector(
-    (state: RootState) => state.persistedReducer.auth.isAuthenticated
+    (state: RootState) => state.persistedReducer.auth.isAuthenticated,
   );
 
   if (isAuthenticated) {
@@ -201,7 +204,11 @@ const SuperAdminLogin: React.FC = () => {
                   Admin Login
                 </h2>
 
-                <form method="post" onSubmit={handleSubmit(onSubmit)}>
+                <form
+                  method="post"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mb-3"
+                >
                   <div className="mb-4">
                     <label
                       htmlFor="email"
@@ -317,11 +324,12 @@ const SuperAdminLogin: React.FC = () => {
                     </p>
                   </div>
                 </form>
-                {isError && (
-                  <p className="text-red-500">Login Failed</p>
-                )}
-                {loginError && (
-                  <p className="text-red-500 ">{loginError}</p>
+                {isError && <p className="text-red-500">Login Failed</p>}
+                {showErrorMessage && (
+                  <ErrorMessage
+                    message={loginError}
+                    setShowMessage={setShowErrorMessage}
+                  />
                 )}
               </div>
             </div>
