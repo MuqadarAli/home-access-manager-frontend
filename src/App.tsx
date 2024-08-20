@@ -36,6 +36,9 @@ import { AdminChangePass } from './pages/ChangePassword/AdminChangePass';
 import AdminProfile from './pages/AdminProfile';
 import { PendingProducts } from './pages/Products/PendingProducts';
 import { ProductDetail } from './pages/Products/ProductDetail';
+import { ApprovedProducts } from './pages/Products/ApprovedProducts';
+import { PendingBusiness } from './pages/Business/PendingBusiness';
+import { BusinessDetail } from './pages/Business/BusinessDetail';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -225,10 +228,42 @@ function App() {
         }
       />
       <Route
+        path="/products/approved-products"
+        element={
+          <IsAuth>
+            <ApprovedProducts />
+          </IsAuth>
+        }
+      />
+      <Route
         path="/products/product-detail"
         element={
           <IsAuth>
             <ProductDetail />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/businesses/pending-businesses"
+        element={
+          <IsAuth>
+            <PendingBusiness />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/products/approved-products"
+        element={
+          <IsAuth>
+            <ApprovedProducts />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/businesses/business-detail"
+        element={
+          <IsAuth>
+            <BusinessDetail />
           </IsAuth>
         }
       />

@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { IoMdCheckmark } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../Loader';
-import { ApproveModal } from '../Modal/ApproveModal';
 import { DisableModal } from '../Modal/DisableModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { useGetPendingProductsForCommunityQuery } from '../../redux/rtk-query/product';
+import { useGetApprovedProductsForCommunityQuery } from '../../redux/rtk-query/product';
 
-const PendingProductsComp: React.FC = () => {
-  const [approveModal, setApproveModal] = useState<boolean>(false);
+const ApprovedProductsComp: React.FC = () => {
   const [disableModal, setDisableModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
   const profile = useSelector(
@@ -23,17 +20,12 @@ const PendingProductsComp: React.FC = () => {
     data: products,
     isError,
     isLoading,
-  } = useGetPendingProductsForCommunityQuery(community_id);
+  } = useGetApprovedProductsForCommunityQuery(community_id);
 
   const navigate = useNavigate();
   const viewHandler = (product: any) => {
     navigate('/products/product-detail', { state: { product } });
   };
-
-  function approveHandler(id: any) {
-    setApproveModal(!approveModal);
-    setCurrentId(id);
-  }
 
   function disableHandler(id: any) {
     setDisableModal(!disableModal);
@@ -41,7 +33,7 @@ const PendingProductsComp: React.FC = () => {
   }
   return (
     <>
-      <Breadcrumb pageName="Pending Products" />
+      <Breadcrumb pageName="Approved Products" />
       <div>{isLoading && <Loader />}</div>
       <div>
         {isError && (
@@ -99,13 +91,6 @@ const PendingProductsComp: React.FC = () => {
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button
-                          className="hover:text-primary bg-green-400 hover:bg-slate-100 rounded-full p-1"
-                          onClick={() => approveHandler(product?.id)}
-                          id="mark-button"
-                        >
-                          <IoMdCheckmark size={20} className="text-white" />
-                        </button>
-                        <button
                           className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
                           onClick={() => disableHandler(product?.id)}
                           id="cross-button"
@@ -127,15 +112,16 @@ const PendingProductsComp: React.FC = () => {
             </table>
           </div>
         </div>
-        {approveModal && (
-          <ApproveModal name="Product" setModal={setApproveModal} id={currentId} />
-        )}
         {disableModal && (
-          <DisableModal name="Product" setModal={setDisableModal} id={currentId} />
+          <DisableModal
+            name="Product"
+            setModal={setDisableModal}
+            id={currentId}
+          />
         )}
       </div>
     </>
   );
 };
 
-export default PendingProductsComp;
+export default ApprovedProductsComp;
