@@ -62,6 +62,15 @@ export const communityApi = createApi({
       }),
       providesTags: ['community'],
     }),
+
+    updateCommunityProfile: builder.mutation({
+      query: (body) => ({
+        url: 'update-community',
+        method: 'PATCH',
+        body: body,
+      }),
+      invalidatesTags: ['community'],
+    }),
   }),
 });
 
@@ -72,4 +81,5 @@ export const {
   useGetPendingCommunityQuery,
   useCommunityDisableMutation,
   useGetCommunityTypeQuery,
+  useUpdateCommunityProfileMutation
 } = communityApi;

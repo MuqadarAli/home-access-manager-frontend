@@ -5,6 +5,9 @@ import { useCommunityApprovalMutation } from '../../redux/rtk-query/community';
 import SuccessAlert from '../Alert/SuccessAlert';
 import ErrorAlert from '../Alert/ErrorAlert';
 import { useUserApprovalByAdminMutation } from '../../redux/rtk-query/user';
+import { useVisitorApprovalByAdminMutation } from '../../redux/rtk-query/visitor';
+import { useAirbnbApprovalByAdminMutation } from '../../redux/rtk-query/airbnb';
+import { useProductApprovalByAdminMutation } from '../../redux/rtk-query/product';
 
 type approveModalType = {
   id: string;
@@ -21,6 +24,30 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
     userApproval,
     { isError: userError, isLoading: userLoading, isSuccess: userSuccess },
   ] = useUserApprovalByAdminMutation();
+  const [
+    visitorApproval,
+    {
+      isError: visitorError,
+      isLoading: visitorLoading,
+      isSuccess: visitorSuccess,
+    },
+  ] = useVisitorApprovalByAdminMutation();
+  const [
+    airbnbApproval,
+    {
+      isError: airbnbError,
+      isLoading: airbnbLoading,
+      isSuccess: airbnbSuccess,
+    },
+  ] = useAirbnbApprovalByAdminMutation();
+  const [
+    productApproval,
+    {
+      isError: productError,
+      isLoading: productLoading,
+      isSuccess: productSuccess,
+    },
+  ] = useProductApprovalByAdminMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -39,6 +66,27 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
           break;
         case 'User':
           await userApproval({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Visitor':
+          await visitorApproval({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Airbnb':
+          await airbnbApproval({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Product':
+          await productApproval({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -98,19 +146,41 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
                   </button>
                   <button
                     onClick={() => approveHandler(id)}
-                    disabled={isLoading}
+                    disabled={
+                      isLoading ||
+                      userLoading ||
+                      visitorLoading ||
+                      airbnbLoading ||
+                      productLoading
+                    }
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
-                    {!isLoading || !userLoading ? 'Approve' : <Loader />}
+                    {!isLoading ||
+                    !userLoading ||
+                    !visitorLoading ||
+                    !airbnbLoading ||
+                    !productLoading ? (
+                      'Approve'
+                    ) : (
+                      <Loader />
+                    )}
                   </button>
                 </div>
-                {(isSuccess || userSuccess) && (
-                  <div id="community-approval-alert" className="mt-3">
+                {(isSuccess ||
+                  userSuccess ||
+                  visitorSuccess ||
+                  airbnbSuccess ||
+                  productSuccess) && (
+                  <div id="approval-alert" className="mt-3">
                     <SuccessAlert name={name} action="Approve" />
                   </div>
                 )}
-                {(isError || userError) && (
-                  <div id="error-community-approval-alert" className="mt-3">
+                {(isError ||
+                  userError ||
+                  visitorError ||
+                  airbnbError ||
+                  productError) && (
+                  <div id="error-approval-alert" className="mt-3">
                     <ErrorAlert />
                   </div>
                 )}

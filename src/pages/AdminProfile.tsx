@@ -1,23 +1,89 @@
+import { useState } from 'react';
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { useForm } from 'react-hook-form';
+import {
+  useGetCommunityTypeQuery,
+  useUpdateCommunityProfileMutation,
+} from '../redux/rtk-query/community';
+import Loader from '../components/Loader';
+import SuccessMessage from '../components/Alert/SuccessMessage';
+import ErrorMessage from '../components/Alert/ErrorMessage';
+import { updateProfile } from '../redux/slice/auth';
 
 type FormType = {
-    name: string;
-    description: string;
-    address: string;
-    city: string;
-    zip_code: string;
-    full_name: string;
-    email: string;
-    phone: string;
-    communityType_id: string;
-  };
-  
+  id: string;
+  name: string;
+  description: string;
+  address: string;
+  city: string;
+  zip_code: string;
+  full_name: string;
+  email: string;
+  phone: string;
+  communityType_id: string;
+};
+
 const AdminProfile = () => {
+  const [addError, setAddError] = useState<string | null>(null);
+  const [addSuccess, setAddSuccess] = useState<string | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
+
+  const { data: communityTypes } = useGetCommunityTypeQuery(undefined);
+  const [updateCommunityProfile, { isLoading, isError, isSuccess }] =
+    useUpdateCommunityProfileMutation();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<FormType>({
+    defaultValues: {
+      id: profile?.community?.id || '',
+      full_name: profile?.full_name || '',
+      email: profile?.email || '',
+      name: profile?.community?.name || '',
+      description: profile?.community?.description || '',
+      address: profile?.community?.address || '',
+      city: profile?.community?.city || '',
+      zip_code: profile?.community?.zip_code || '',
+      phone: profile?.phone || '',
+      communityType_id: profile?.community?.community_type?.id || '',
+    },
+  });
+
+  const dispatch = useDispatch();
+
+  const onSubmit: any = async (data: any) => {
+    try {
+      const response = await updateCommunityProfile(data).unwrap();
+      if (response?.statusCode == 200) {
+        setAddSuccess(response?.message);
+        dispatch(updateProfile(response?.value));
+        setShowSuccessMessage(true);
+      } else {
+        setAddError(response?.message);
+        setShowErrorMessage(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <div className="mx-auto max-full">
         <Breadcrumb pageName="Profile" />
-
+        <div>
+          {isError && (
+            <p className="text-lg leading-6 font-medium text-red-500">
+              System Failed
+            </p>
+          )}
+        </div>
         <div className="flex w-full px-2 sm:px-10 justify-center gap-8">
           <div className="w-full xl:w-1/2">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -27,7 +93,7 @@ const AdminProfile = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form method="post" onSubmit={handleSubmit(onSubmit)} className='mb-3'>
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full xl:w-1/2">
                       <label
@@ -65,11 +131,23 @@ const AdminProfile = () => {
                         <input
                           className="w-full rounded border border-stroke  py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
-                          name="full_name"
+                          {...register('full_name', {
+                            required: 'This field is required',
+                            maxLength: {
+                              value: 20,
+                              message:
+                                'The full name of the admin must be no longer than 100 characters.',
+                            },
+                          })}
                           id="full_name"
                           placeholder="Enter full name"
                         />
                       </div>
+                      {errors?.full_name && (
+                        <p className="text-red-500">
+                          {errors?.full_name?.message}
+                        </p>
+                      )}
                     </div>
 
                     <div className="w-full sm:w-1/2">
@@ -82,10 +160,20 @@ const AdminProfile = () => {
                       <input
                         className="w-full rounded border border-stroke  py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="phone"
+                        {...register('phone', {
+                          required: 'This field is required',
+                          pattern: {
+                            value:
+                              /^\+?(\d{1,3})?[-]?(\(\d{3}\))?[-]?(\d{3})[-]?(\d{4})$/,
+                            message: 'Invalid phone number formate',
+                          },
+                        })}
                         id="phone"
                         placeholder="Enter phone number"
                       />
+                      {errors?.phone && (
+                        <p className="text-red-500">{errors?.phone?.message}</p>
+                      )}
                     </div>
                   </div>
 
@@ -125,11 +213,21 @@ const AdminProfile = () => {
                       <input
                         className="w-full rounded border border-stroke  py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="email"
+                        {...register('email', {
+                          required: 'This field is required',
+                          pattern: {
+                            value:
+                              /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                            message: 'Invalid email formate',
+                          },
+                        })}
                         id="email"
                         placeholder="Enter email"
                       />
                     </div>
+                    {errors?.email && (
+                      <p className="text-red-500">{errors?.email?.message}</p>
+                    )}
                   </div>
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full xl:w-1/2">
@@ -139,15 +237,24 @@ const AdminProfile = () => {
                       >
                         Community Name
                       </label>
-                      <div className="relative">
-                        <input
-                          className="w-full rounded border border-stroke  px-4.5 py-3  pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                          type="text"
-                          name="name"
-                          id="name"
-                          placeholder="Enter community name"
-                        />
-                      </div>
+                      <input
+                        className="w-full rounded border border-stroke  px-4.5 py-3  pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                        type="text"
+                        {...register('name', {
+                          required: 'This field is required',
+                          pattern: {
+                            value: /^(?! )[a-zA-Z\s]{1,40}(?<! )$/,
+                            message:
+                              'The name must be no longer than 40 characters.',
+                          },
+                        })}
+                        id="name"
+                        placeholder="Enter community name"
+                      />
+
+                      {errors?.name && (
+                        <p className="text-red-500">{errors?.name?.message}</p>
+                      )}
                     </div>
 
                     <div className="w-full xl:w-1/2">
@@ -163,9 +270,9 @@ const AdminProfile = () => {
                           <select
                             className={`relative z-20 w-full appearance-none rounded border  border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input ${'text-black dark:text-white'}`}
                             id="community_type"
-                            //   {...register('communityType_id', {
-                            //     required: 'This field is required',
-                            //   })}
+                            {...register('communityType_id', {
+                              required: 'This field is required',
+                            })}
                           >
                             <option
                               value=""
@@ -174,15 +281,15 @@ const AdminProfile = () => {
                             >
                               Select community type
                             </option>
-                            {/* {communityTypes?.value.map((communityType: any) => (
-                            <option
-                              value={communityType?.id}
-                              key={communityType?.id}
-                              className="text-body text-base dark:text-bodydark"
-                            >
-                              {communityType?.name}
-                            </option>
-                          ))} */}
+                            {communityTypes?.value.map((communityType: any) => (
+                              <option
+                                value={communityType?.id}
+                                key={communityType?.id}
+                                className="text-body text-base dark:text-bodydark"
+                              >
+                                {communityType?.name}
+                              </option>
+                            ))}
                           </select>
 
                           <span className="absolute top-1/2 right-4 z-10 -translate-y-1/2">
@@ -204,11 +311,11 @@ const AdminProfile = () => {
                             </svg>
                           </span>
                         </div>
-                        {/* {errors?.communityType_id && (
-                        <p className="text-red-500">
-                          {errors?.communityType_id?.message}
-                        </p>
-                      )} */}
+                        {errors?.communityType_id && (
+                          <p className="text-red-500">
+                            {errors?.communityType_id?.message}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -223,10 +330,20 @@ const AdminProfile = () => {
                     <input
                       className="w-full rounded border border-stroke  py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                       type="text"
-                      name="address"
+                      {...register('address', {
+                        required: 'This field is required',
+                        maxLength: {
+                          value: 1000,
+                          message:
+                            'The address must be no longer than 1000 characters.',
+                        },
+                      })}
                       id="address"
                       placeholder="Enter address"
                     />
+                    {errors?.address && (
+                      <p className="text-red-500">{errors?.address?.message}</p>
+                    )}
                   </div>
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full xl:w-1/2">
@@ -240,10 +357,22 @@ const AdminProfile = () => {
                         <input
                           className="w-full rounded border border-stroke  py-3 px-4.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
-                          name="city"
+                          {...register('city', {
+                            required: 'This field is required',
+                            maxLength: {
+                              value: 1000,
+                              message:
+                                'The city must be no longer than 1000 characters.',
+                            },
+                          })}
                           id="city"
                           placeholder="Enter city"
                         />
+                        {errors?.city && (
+                          <p className="text-red-500">
+                            {errors?.city?.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -257,10 +386,22 @@ const AdminProfile = () => {
                       <input
                         className="w-full rounded border border-stroke  py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                         type="text"
-                        name="zip_code"
+                        {...register('zip_code', {
+                          required: 'This field is required',
+                          maxLength: {
+                            value: 100,
+                            message:
+                              'The zip code must be no longer than 100 characters.',
+                          },
+                        })}
                         id="zip_code"
                         placeholder="Enter zip code"
                       />
+                      {errors?.zip_code && (
+                        <p className="text-red-500">
+                          {errors?.zip_code?.message}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -305,12 +446,24 @@ const AdminProfile = () => {
 
                       <textarea
                         className="w-full rounded border border-stroke  py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        name="description"
+                        {...register('description', {
+                          required: 'This field is required',
+                          maxLength: {
+                            value: 1000,
+                            message:
+                              'The description must be no longer than 1000 characters.',
+                          },
+                        })}
                         id="description"
                         rows={6}
                         placeholder="Enter description"
                       ></textarea>
                     </div>
+                    {errors?.description && (
+                      <p className="text-red-500">
+                        {errors?.description?.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex justify-end gap-4.5">
@@ -318,10 +471,22 @@ const AdminProfile = () => {
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                       type="submit"
                     >
-                      Save
+                      {!isLoading ? 'Save' : <Loader />}
                     </button>
                   </div>
                 </form>
+                {isSuccess && showSuccessMessage && addSuccess && (
+                  <SuccessMessage
+                    message={addSuccess}
+                    setShowMessage={setShowSuccessMessage}
+                  />
+                )}
+                {addError && showErrorMessage && (
+                  <ErrorMessage
+                    message={addError}
+                    setShowMessage={setShowErrorMessage}
+                  />
+                )}
               </div>
             </div>
           </div>

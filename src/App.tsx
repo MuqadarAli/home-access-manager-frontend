@@ -34,6 +34,8 @@ import { IsAuth } from './components/IsAuth';
 import { SuperAdminChangePass } from './pages/ChangePassword';
 import { AdminChangePass } from './pages/ChangePassword/AdminChangePass';
 import AdminProfile from './pages/AdminProfile';
+import { PendingProducts } from './pages/Products/PendingProducts';
+import { ProductDetail } from './pages/Products/ProductDetail';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -150,28 +152,85 @@ function App() {
           </IsAuth>
         }
       />
-      <Route path="users/pending-users" element={<PendingUsers />} />
-      <Route path="users/user-detail" element={<UserDetail />} />
-      <Route path="users/approved-users" element={<ApprovedUsers />} />
+      <Route
+        path="users/pending-users"
+        element={
+          <IsAuth>
+            <PendingUsers />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="users/user-detail"
+        element={
+          <IsAuth>
+            <UserDetail />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="users/approved-users"
+        element={
+          <IsAuth>
+            <ApprovedUsers />
+          </IsAuth>
+        }
+      />
       <Route
         path="/visitors-airbnb/pending-visitors"
-        element={<PendingVisitors />}
+        element={
+          <IsAuth>
+            <PendingVisitors />
+          </IsAuth>
+        }
       />
       <Route
         path="/visitors-airbnb/visitor-detail"
-        element={<VisitorDetail />}
+        element={
+          <IsAuth>
+            <VisitorDetail />
+          </IsAuth>
+        }
       />
       <Route
         path="/visitors-airbnb/approved-visitors"
-        element={<ApprovedVisitors />}
+        element={
+          <IsAuth>
+            <ApprovedVisitors />
+          </IsAuth>
+        }
       />
       <Route
         path="/visitors-airbnb/pending-airbnb"
-        element={<PendingAirbnb />}
+        element={
+          <IsAuth>
+            <PendingAirbnb />
+          </IsAuth>
+        }
       />
       <Route
         path="/visitors-airbnb/approved-airbnb"
-        element={<ApprovedAirbnb />}
+        element={
+          <IsAuth>
+            <ApprovedAirbnb />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/products/pending-products"
+        element={
+          <IsAuth>
+            <PendingProducts />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/products/product-detail"
+        element={
+          <IsAuth>
+            <ProductDetail />
+          </IsAuth>
+        }
       />
       <Route
         path="/calendar"

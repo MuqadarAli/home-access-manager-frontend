@@ -5,6 +5,9 @@ import { useCommunityDisableMutation } from '../../redux/rtk-query/community';
 import SuccessAlert from '../Alert/SuccessAlert';
 import ErrorAlert from '../Alert/ErrorAlert';
 import { useUserDisableByAdminMutation } from '../../redux/rtk-query/user';
+import { useVisitorDisableByAdminMutation } from '../../redux/rtk-query/visitor';
+import { useAirbnbDisableByAdminMutation } from '../../redux/rtk-query/airbnb';
+import { useProductDisableByAdminMutation } from '../../redux/rtk-query/product';
 
 type disableModalType = {
   id: string;
@@ -21,6 +24,30 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
     disableUser,
     { isError: userError, isLoading: userLoading, isSuccess: userSuccess },
   ] = useUserDisableByAdminMutation();
+  const [
+    disableVisitor,
+    {
+      isError: visitorError,
+      isLoading: visitorLoading,
+      isSuccess: visitorSuccess,
+    },
+  ] = useVisitorDisableByAdminMutation();
+  const [
+    airbnbDisable,
+    {
+      isError: airbnbError,
+      isLoading: airbnbLoading,
+      isSuccess: airbnbSuccess,
+    },
+  ] = useAirbnbDisableByAdminMutation();
+  const [
+    productDisable,
+    {
+      isError: productError,
+      isLoading: productLoading,
+      isSuccess: productSuccess,
+    },
+  ] = useProductDisableByAdminMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -39,6 +66,27 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
           break;
         case 'User':
           await disableUser({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Visitor':
+          await disableVisitor({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Airbnb':
+          await airbnbDisable({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Product':
+          await productDisable({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -98,18 +146,40 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
                   </button>
                   <button
                     onClick={() => approveHandler(id)}
-                    disabled={isLoading || userLoading}
+                    disabled={
+                      isLoading ||
+                      userLoading ||
+                      visitorLoading ||
+                      airbnbLoading ||
+                      productLoading
+                    }
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
-                    {!isLoading || !userLoading ? 'Disable' : <Loader />}
+                    {!isLoading ||
+                    !userLoading ||
+                    !visitorLoading ||
+                    !airbnbLoading ||
+                    !productLoading ? (
+                      'Disable'
+                    ) : (
+                      <Loader />
+                    )}
                   </button>
                 </div>
-                {(isSuccess || userSuccess) && (
+                {(isSuccess ||
+                  userSuccess ||
+                  visitorSuccess ||
+                  airbnbSuccess ||
+                  productSuccess) && (
                   <div id="approval-alert" className="mt-3">
                     <SuccessAlert name={name} action="Disable" />
                   </div>
                 )}
-                {(isError || userError) && (
+                {(isError ||
+                  userError ||
+                  visitorError ||
+                  airbnbError ||
+                  productError) && (
                   <div id="error-approval-alert" className="mt-3">
                     <ErrorAlert />
                   </div>

@@ -8,12 +8,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated, setToken } from '../../redux/slice/auth';
 import Loader from '../../components/Loader';
 import { RootState } from '../../redux/store';
+import ErrorMessage from '../../components/Alert/ErrorMessage';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [login, { isError, isLoading }] = useAdminLoginMutation();
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string>('');
   const dispatch = useDispatch();
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
   const {
     handleSubmit,
     register,
@@ -33,6 +35,7 @@ const Login: React.FC = () => {
         dispatch(setAuthenticated(true));
         navigate('/dashboard');
       } else {
+        setShowErrorMessage(true);
         setLoginError(response?.message);
       }
     } catch (error) {
@@ -198,10 +201,10 @@ const Login: React.FC = () => {
             <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
               <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
                 <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                 Community Admin Login
+                  Community Admin Login
                 </h2>
 
-                <form method="post" onSubmit={handleSubmit(onSubmit)}>
+                <form method="post" onSubmit={handleSubmit(onSubmit)} className='mb-3'>
                   <div className="mb-4">
                     <label
                       htmlFor="email"
@@ -318,7 +321,12 @@ const Login: React.FC = () => {
                   </div>
                 </form>
                 {isError && <p className="text-red-500">Login Failed</p>}
-                {loginError && <p className="text-red-500 ">{loginError}</p>}
+                {showErrorMessage && (
+                  <ErrorMessage
+                    message={loginError}
+                    setShowMessage={setShowErrorMessage}
+                  />
+                )}
               </div>
             </div>
           </div>
