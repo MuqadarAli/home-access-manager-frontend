@@ -11,9 +11,9 @@ const UserDetailComp: React.FC = () => {
     <>
       <Breadcrumb pageName="User Detail" />
 
-      <div className="overflow-hidden p-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <div className="">
-          <dl className="grid grid-cols-1 sm:grid-cols-2">
+      <div className=" grid grid-cols-5 gap-8 ">
+        <div className="col-span-5 xl:col-span-3">
+          <dl className="grid grid-cols-1 sm:grid-cols-2 overflow-hidden p-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className=" px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
                 First Name
@@ -90,6 +90,22 @@ const UserDetailComp: React.FC = () => {
               </dd>
             </div>
           </dl>
+        </div>
+        <div className="col-span-5 xl:col-span-2">
+          <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+              <h3 className="font-medium text-black dark:text-white">
+                Image
+              </h3>
+            </div>
+            {user?.image_url && <div className="p-7">
+              <img
+                alt="user-image"
+                src={user?.image_url}
+                className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
+              ></img>
+            </div>}
+          </div>
         </div>
       </div>
     </>

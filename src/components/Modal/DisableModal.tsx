@@ -8,6 +8,7 @@ import { useUserDisableByAdminMutation } from '../../redux/rtk-query/user';
 import { useVisitorDisableByAdminMutation } from '../../redux/rtk-query/visitor';
 import { useAirbnbDisableByAdminMutation } from '../../redux/rtk-query/airbnb';
 import { useProductDisableByAdminMutation } from '../../redux/rtk-query/product';
+import { useBusinessDisableByAdminMutation } from '../../redux/rtk-query/business';
 
 type disableModalType = {
   id: string;
@@ -48,6 +49,14 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
       isSuccess: productSuccess,
     },
   ] = useProductDisableByAdminMutation();
+  const [
+    businessDisable,
+    {
+      isError: businessError,
+      isLoading: businessLoading,
+      isSuccess: businessSuccess,
+    },
+  ] = useBusinessDisableByAdminMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -87,6 +96,13 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
           break;
         case 'Product':
           await productDisable({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Business':
+          await businessDisable({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -151,7 +167,8 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
                       userLoading ||
                       visitorLoading ||
                       airbnbLoading ||
-                      productLoading
+                      productLoading ||
+                      businessLoading
                     }
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
@@ -159,7 +176,8 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
                     !userLoading ||
                     !visitorLoading ||
                     !airbnbLoading ||
-                    !productLoading ? (
+                    !productLoading ||
+                    !businessLoading ? (
                       'Disable'
                     ) : (
                       <Loader />
@@ -170,7 +188,8 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
                   userSuccess ||
                   visitorSuccess ||
                   airbnbSuccess ||
-                  productSuccess) && (
+                  productSuccess ||
+                  businessSuccess) && (
                   <div id="approval-alert" className="mt-3">
                     <SuccessAlert name={name} action="Disable" />
                   </div>
@@ -179,7 +198,8 @@ export function DisableModal({ name, setModal, id }: disableModalType) {
                   userError ||
                   visitorError ||
                   airbnbError ||
-                  productError) && (
+                  productError ||
+                  businessError) && (
                   <div id="error-approval-alert" className="mt-3">
                     <ErrorAlert />
                   </div>

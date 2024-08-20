@@ -12,18 +12,9 @@ const VisitorDetailComp: React.FC = () => {
     <>
       <Breadcrumb pageName="Visitor Detail" />
 
-      <div className="overflow-hidden relative p-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <div className="">
-          <div className="flex  justify-center aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden">
-            <div className="h-50 w-50 border p-1 rounded-lg bg-slate-500 overflow-hidden">
-              <img
-                alt="visitor-image"
-                src={visitor?.image_url}
-                className=" object-cover rounded-lg w-full h-full"
-              />
-            </div>
-          </div>
-          <dl className="grid grid-cols-1 sm:grid-cols-2">
+      <div className="grid grid-cols-5 gap-8 ">
+        <div className="col-span-6 xl:col-span-3">
+          <dl className="grid grid-cols-1 sm:grid-cols-2 overflow-hidden p-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className=" px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
                 First Name
@@ -117,6 +108,22 @@ const VisitorDetailComp: React.FC = () => {
               </dd>
             </div>
           </dl>
+        </div>
+        <div className="col-span-5 xl:col-span-2">
+          <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+              <h3 className="font-medium text-black dark:text-white">Image</h3>
+            </div>
+            {visitor?.image_url && (
+              <div className="p-2 flex justify-center">
+                <img
+                  alt="visitor-image"
+                  src={visitor?.image_url}
+                  className="relative mb-5.5 block w-4/5 appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

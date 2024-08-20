@@ -1,7 +1,7 @@
 import React from 'react';
 import AdminLayout from '../../layout/AdminLayout';
 import PageTitle from '../../components/PageTitle';
-import PendingProductsComp from '../../components/ProductComp/PendingProducts';
+import PendingProductsComp from '../../components/ProductComp/PendingProductsComp';
 
 export const PendingProducts: React.FC = () => {
   return (
