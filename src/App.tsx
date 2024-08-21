@@ -39,6 +39,7 @@ import { ProductDetail } from './pages/Products/ProductDetail';
 import { ApprovedProducts } from './pages/Products/ApprovedProducts';
 import { PendingBusiness } from './pages/Business/PendingBusiness';
 import { BusinessDetail } from './pages/Business/BusinessDetail';
+import { ApprovedBusiness } from './pages/Business/ApprovedBusiness';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -252,13 +253,14 @@ function App() {
         }
       />
       <Route
-        path="/products/approved-products"
+        path="/businesses/approved-businesses"
         element={
           <IsAuth>
-            <ApprovedProducts />
+            <ApprovedBusiness />
           </IsAuth>
         }
       />
+
       <Route
         path="/businesses/business-detail"
         element={
