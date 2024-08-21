@@ -24,6 +24,7 @@ import { visitorApi } from './rtk-query/visitor';
 import { airbnbApi } from './rtk-query/airbnb';
 import { productApi } from './rtk-query/product';
 import { businessApi } from './rtk-query/business';
+import { vehicleApi } from './rtk-query/vehicle';
 
 export const resetStoreAction = createAction('RESET_STORE');
 const persistConfig = {
@@ -55,6 +56,7 @@ export const store = configureStore({
     [airbnbApi.reducerPath]: airbnbApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [businessApi.reducerPath]: businessApi.reducer,
+    [vehicleApi.reducerPath]: vehicleApi.reducer,
     persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -70,6 +72,7 @@ export const store = configureStore({
       airbnbApi.middleware,
       productApi.middleware,
       businessApi.middleware,
+      vehicleApi.middleware,
     ),
 });
 

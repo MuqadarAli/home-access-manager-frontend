@@ -40,6 +40,9 @@ import { ApprovedProducts } from './pages/Products/ApprovedProducts';
 import { PendingBusiness } from './pages/Business/PendingBusiness';
 import { BusinessDetail } from './pages/Business/BusinessDetail';
 import { ApprovedBusiness } from './pages/Business/ApprovedBusiness';
+import { PendingVehicles } from './pages/Vehicle/PendingVehicles';
+import { VehicleDetail } from './pages/Vehicle/VehicleDetail';
+import { ApprovedVehicles } from './pages/Vehicle/ApproveVehicles';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -260,12 +263,35 @@ function App() {
           </IsAuth>
         }
       />
-
       <Route
         path="/businesses/business-detail"
         element={
           <IsAuth>
             <BusinessDetail />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/vehicles/pending-vehicles"
+        element={
+          <IsAuth>
+            <PendingVehicles />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/vehicles/vehicle-detail"
+        element={
+          <IsAuth>
+            <VehicleDetail />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/vehicles/approved-vehicles"
+        element={
+          <IsAuth>
+            <ApprovedVehicles />
           </IsAuth>
         }
       />

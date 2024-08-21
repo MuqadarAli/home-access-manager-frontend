@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // const baseUrl =
 //   process.env.ENV === 'development' ? process.env.DEV_URL : process.env.PRO_URL;
-const baseUrl = 'http://localhost:3000';
+const baseUrl = 'https://api.homeaccessmanager.com';
 export const communityApi = createApi({
   reducerPath: 'communityApi',
   baseQuery: fetchBaseQuery({
