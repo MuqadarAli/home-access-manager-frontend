@@ -9,6 +9,12 @@ import SuccessMessage from '../components/Alert/SuccessMessage';
 import ErrorMessage from '../components/Alert/ErrorMessage';
 import Loader from '../components/Loader';
 
+type FormType = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 const ProfileDetail = () => {
   const [addError, setAddError] = useState<string | null>(null);
   const [addSuccess, setAddSuccess] = useState<string | null>(null);
@@ -22,7 +28,7 @@ const ProfileDetail = () => {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm({
+  } = useForm<FormType>({
     defaultValues: {
       id: profile?.id || '',
       name: profile?.name || '',

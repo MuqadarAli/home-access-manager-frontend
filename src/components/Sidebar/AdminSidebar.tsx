@@ -578,8 +578,8 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/businesses' ||
-                            pathname.includes('businesses')) &&
+                          (pathname === '/vehicles' ||
+                            pathname.includes('vehicles')) &&
                           'bg-graydark dark:bg-meta-4'
                         }`}
                         onClick={(e) => {

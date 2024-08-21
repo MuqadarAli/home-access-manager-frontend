@@ -119,7 +119,7 @@ const BusinessDetailComp = () => {
 
                     <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                       <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                        Apply Date
+                        Date Of Apply
                       </dt>
                       <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
                         {datetimeFormate(business?.created_at)}
@@ -127,7 +127,7 @@ const BusinessDetailComp = () => {
                     </div>
                     <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                       <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                        Approval Date
+                        Date Of Approval
                       </dt>
                       <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
                         {datetimeFormate(business?.approval_date)}

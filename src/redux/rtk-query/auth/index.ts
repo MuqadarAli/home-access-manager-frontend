@@ -1,15 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
 // const baseUrl = import.meta.env.VITE_ENV === 'development'
 //   ? import.meta.env.VITE_DEV_URL
 //   : import.meta.env.VITE_PRO_URL;
-const baseUrl = 'http://localhost:3000';
+const baseUrl = 'https://api.homeaccessmanager.com';
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
     baseUrl: `${baseUrl}/auth/`,
   }),
-
 
   endpoints: (builder) => ({
     superAdminLogin: builder.mutation({

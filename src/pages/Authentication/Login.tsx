@@ -55,7 +55,7 @@ const Login: React.FC = () => {
     <>
       {/* <Breadcrumb pageName="Admin" /> */}
 
-      <div className="rounded-sm border m-auto  border-stroke flex justify-center w-full h-screen bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <div className="rounded-sm border m-auto px-5 md:px-0 border-stroke flex justify-center w-full h-screen bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-col items-center justify-center w-full h-full">
           <div className="flex flex-wrap justify-center items-center px-10 w-full md:w-4/6 md:h-4/5 shadow-lg">
             <div className="hidden  px-10 xl:block xl:w-1/2">

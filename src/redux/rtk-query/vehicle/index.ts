@@ -3,54 +3,54 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 // const baseUrl =
 //   process.env.ENV === 'development' ? process.env.DEV_URL : process.env.PRO_URL;
 const baseUrl = 'https://api.homeaccessmanager.com';
-export const businessApi = createApi({
-  reducerPath: 'businessApi',
+export const vehicleApi = createApi({
+  reducerPath: 'vehicleApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${baseUrl}/business/`,
+    baseUrl: `${baseUrl}/vehicle/`,
   }),
 
-  tagTypes: ['business'],
+  tagTypes: ['vehicle'],
 
   endpoints: (builder) => ({
-    businessApprovalByAdmin: builder.mutation({
+    vehicleApprovalByAdmin: builder.mutation({
       query: (body) => ({
         url: 'approval',
         method: 'PATCH',
         body: body,
       }),
-      invalidatesTags: ['business'],
+      invalidatesTags: ['vehicle'],
     }),
 
-    businessDisableByAdmin: builder.mutation({
+    vehicleDisableByAdmin: builder.mutation({
       query: (body) => ({
         url: 'disable',
         method: 'PATCH',
         body: body,
       }),
-      invalidatesTags: ['business'],
+      invalidatesTags: ['vehicle'],
     }),
 
-    getPendingBusinessesForCommunity: builder.query({
+    getPendingVehiclesForCommunity: builder.query({
       query: (community_id) => ({
         url: `pending/${community_id}`,
         method: 'GET',
       }),
-      providesTags: ['business'],
+      providesTags: ['vehicle'],
     }),
 
-    getApprovedBusinessesForCommunity: builder.query({
+    getApprovedVehiclesForCommunity: builder.query({
       query: (community_id) => ({
         url: `approved/${community_id}`,
         method: 'GET',
       }),
-      providesTags: ['business'],
+      providesTags: ['vehicle'],
     }),
   }),
 });
 
 export const {
-  useBusinessApprovalByAdminMutation,
-  useBusinessDisableByAdminMutation,
-  useGetApprovedBusinessesForCommunityQuery,
-  useGetPendingBusinessesForCommunityQuery,
-} = businessApi;
+  useGetApprovedVehiclesForCommunityQuery,
+  useGetPendingVehiclesForCommunityQuery,
+  useVehicleApprovalByAdminMutation,
+  useVehicleDisableByAdminMutation,
+} = vehicleApi;

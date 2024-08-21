@@ -9,6 +9,7 @@ import { useVisitorApprovalByAdminMutation } from '../../redux/rtk-query/visitor
 import { useAirbnbApprovalByAdminMutation } from '../../redux/rtk-query/airbnb';
 import { useProductApprovalByAdminMutation } from '../../redux/rtk-query/product';
 import { useBusinessApprovalByAdminMutation } from '../../redux/rtk-query/business';
+import { useVehicleApprovalByAdminMutation } from '../../redux/rtk-query/vehicle';
 
 type approveModalType = {
   id: string;
@@ -57,6 +58,14 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
       isSuccess: businessSuccess,
     },
   ] = useBusinessApprovalByAdminMutation();
+  const [
+    vehicleApproval,
+    {
+      isError: vehicleError,
+      isLoading: vehicleLoading,
+      isSuccess: vehicleSuccess,
+    },
+  ] = useVehicleApprovalByAdminMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -103,6 +112,13 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
           break;
         case 'Business':
           await businessApproval({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Vehicle':
+          await vehicleApproval({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -168,7 +184,8 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
                       visitorLoading ||
                       airbnbLoading ||
                       productLoading ||
-                      businessLoading
+                      businessLoading ||
+                      vehicleLoading
                     }
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
@@ -177,7 +194,8 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
                     !visitorLoading ||
                     !airbnbLoading ||
                     !productLoading ||
-                    !businessLoading ? (
+                    !businessLoading ||
+                    !vehicleLoading ? (
                       'Approve'
                     ) : (
                       <Loader />
@@ -189,7 +207,8 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
                   visitorSuccess ||
                   airbnbSuccess ||
                   productSuccess ||
-                  businessSuccess) && (
+                  businessSuccess ||
+                  vehicleSuccess) && (
                   <div id="approval-alert" className="mt-3">
                     <SuccessAlert name={name} action="Approve" />
                   </div>
@@ -199,7 +218,8 @@ export function ApproveModal({ name, setModal, id }: approveModalType) {
                   visitorError ||
                   airbnbError ||
                   productError ||
-                  businessError) && (
+                  businessError ||
+                  vehicleError) && (
                   <div id="error-approval-alert" className="mt-3">
                     <ErrorAlert />
                   </div>
