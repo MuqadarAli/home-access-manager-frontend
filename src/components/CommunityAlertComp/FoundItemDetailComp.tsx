@@ -5,54 +5,62 @@ import { datetimeFormate } from '../../utils/datetimeFormate';
 
 const FoundItemDetailComp: React.FC = () => {
   const locationData = useLocation();
-  const vehicle = locationData.state?.vehicle;
+  const foundItem = locationData.state?.foundItem;
 
   return (
     <>
       <Breadcrumb pageName="Found Item Detail" />
 
-      <div className="w-full flex justify-center">
-        <div className="w-full md:w-4/5 ">
+      <div className="grid grid-cols-5 gap-8">
+        <div className="col-span-5 xl:col-span-3">
           <dl className="grid grid-cols-1 sm:grid-cols-2 overflow-hidden p-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className=" px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                License Plate
+                Name
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.license_plate}
+                {foundItem?.name}
               </dd>
             </div>
             <div className=" px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Model Of Vehicle
+                Town
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.model_of_vehicle}
+                {foundItem?.town}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Year Of Vehicle
+                Vicinity
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.year_of_vehicle}
+                {foundItem?.vicinity}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Make Of Vehicle
+                Found Date
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.make_of_vehicle}
+                {datetimeFormate(foundItem?.found_date)}
               </dd>
             </div>
 
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Color Of Vehicle
+                Recover Place
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.color_of_vehicle}
+                {foundItem?.recover_place}
+              </dd>
+            </div>
+            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+              <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
+                Recovered Address
+              </dt>
+              <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
+                {foundItem?.recovered_address}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -60,7 +68,7 @@ const FoundItemDetailComp: React.FC = () => {
                 User Name
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {`${vehicle?.user?.first_name} ${vehicle?.user?.last_name}`}
+                {`${foundItem?.user?.first_name} ${foundItem?.user?.last_name}`}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -68,7 +76,7 @@ const FoundItemDetailComp: React.FC = () => {
                 User Email
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.user?.email}
+                {foundItem?.user?.email}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -76,7 +84,7 @@ const FoundItemDetailComp: React.FC = () => {
                 User Phone
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.user?.primary_phone}
+                {foundItem?.user?.primary_phone}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -84,22 +92,20 @@ const FoundItemDetailComp: React.FC = () => {
                 Date Of Apply
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.approval_date
-                  ? datetimeFormate(vehicle?.created_at)
-                  : ''}
-              </dd>
-            </div>
-            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-              <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Date Of Approval
-              </dt>
-              <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {vehicle?.approval_date
-                  ? datetimeFormate(vehicle?.approval_date)
-                  : ''}
+                {datetimeFormate(foundItem?.created_at)}
               </dd>
             </div>
           </dl>
+        </div>
+        <div className="col-span-5 xl:col-span-2">
+          <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+              <h3 className="font-medium text-black dark:text-white">
+                Description
+              </h3>
+            </div>
+            <div className="py-4 px-7">{foundItem?.description}</div>
+          </div>
         </div>
       </div>
     </>

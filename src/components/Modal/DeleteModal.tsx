@@ -25,7 +25,7 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
   const deleteHandler = async (id: string) => {
     try {
       switch (name) {
-        case 'FoundItem':
+        case 'Found Item':
           await deleteFoundItem({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
@@ -75,7 +75,7 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md sm:p-6">
                 <Dialog.Title as="h3" className="leading-6 font-medium mb-5">
-                  {`Do You Want To Approve ${name}?`}
+                  {`Do You Want To Delete ${name}?`}
                 </Dialog.Title>
                 <div className="flex gap-3 mt-3">
                   <button

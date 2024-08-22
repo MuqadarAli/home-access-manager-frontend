@@ -46,7 +46,6 @@ import { ApprovedVehicles } from './pages/Vehicle/ApproveVehicles';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import { FoundItem } from './pages/CommunityAlert/FoundItem';
-import FoundItemDetailComp from './components/CommunityAlertComp/FoundItemDetailComp';
 import { FoundItemDetail } from './pages/CommunityAlert/FoundItemDetail';
 
 function App() {
