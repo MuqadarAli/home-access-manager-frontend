@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ClickOutside from '../ClickOutside';
-import UserOne from '../../images/user/user-01.png';
 import { TfiLock } from 'react-icons/tfi';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, persister } from '../../redux/store';
 import { logout } from '../../redux/slice/auth';
+import { FcBusinessman } from "react-icons/fc";
 
 const DropdownUser = () => {
   const profile = useSelector(
@@ -35,8 +35,8 @@ const DropdownUser = () => {
           </span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+        <span className="h-12 w-12  rounded-full">
+          <FcBusinessman className="h-11 w-11" />
         </span>
 
         <svg
