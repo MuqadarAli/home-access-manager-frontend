@@ -648,7 +648,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/alert' || pathname.includes('alert')
+                  pathname === '/alerts' || pathname.includes('alerts')
                 }
               >
                 {(handleClick, open) => {
@@ -657,8 +657,8 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/alert' ||
-                            pathname.includes('alert')) &&
+                          (pathname === '/alerts' ||
+                            pathname.includes('alerts')) &&
                           'bg-graydark dark:bg-meta-4'
                         }`}
                         onClick={(e) => {
@@ -774,7 +774,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <NavLink
-                              to="#"
+                              to="/alerts/found-items"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')

@@ -43,6 +43,11 @@ import { ApprovedBusiness } from './pages/Business/ApprovedBusiness';
 import { PendingVehicles } from './pages/Vehicle/PendingVehicles';
 import { VehicleDetail } from './pages/Vehicle/VehicleDetail';
 import { ApprovedVehicles } from './pages/Vehicle/ApproveVehicles';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import { FoundItem } from './pages/CommunityAlert/FoundItem';
+import FoundItemDetailComp from './components/CommunityAlertComp/FoundItemDetailComp';
+import { FoundItemDetail } from './pages/CommunityAlert/FoundItemDetail';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -296,12 +301,47 @@ function App() {
         }
       />
       <Route
+        path="/forgot-password/:name"
+        element={
+          <>
+            <PageTitle title="Forgot Password | Home Access Manager" />
+            <ForgotPassword />
+          </>
+        }
+      />
+      <Route
+        path="/reset-password/:name"
+        element={
+          <>
+            <PageTitle title="Reset Password | Home Access Manager" />
+            <ResetPassword />
+          </>
+        }
+      />
+      <Route
         path="/calendar"
         element={
           <>
             <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
             <Calendar />
           </>
+        }
+      />
+      {/* //------------------------Community Alert----------------// */}
+      <Route
+        path="/alerts/found-items"
+        element={
+          <IsAuth>
+            <FoundItem />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/alerts/found-items/found-item-detail"
+        element={
+          <IsAuth>
+            <FoundItemDetail />
+          </IsAuth>
         }
       />
       {/* <Route

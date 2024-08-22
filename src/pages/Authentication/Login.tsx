@@ -314,7 +314,7 @@ const Login: React.FC = () => {
 
                   <div className="mt-6 text-center">
                     <p>
-                      <Link to="#" className="text-primary">
+                      <Link to="/forgot-password/admin" className="text-primary">
                         Forgot password?
                       </Link>
                     </p>
