@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
-
 import PageTitle from './components/PageTitle';
 import SignIn from './pages/Authentication/SuperAdminLogin';
 import SignUp from './pages/Authentication/SignUp';
@@ -47,6 +46,11 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import { FoundItem } from './pages/CommunityAlert/FoundItem';
 import { FoundItemDetail } from './pages/CommunityAlert/FoundItemDetail';
+import { LostItem } from './pages/CommunityAlert/LostItem';
+import { Alert } from './pages/CommunityAlert/Alert';
+import { AlertDetail } from './pages/CommunityAlert/AlertDetail';
+import { Featured } from './pages/Featured';
+import { AddFeatured } from './pages/Featured/AddFeatured';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -104,7 +108,7 @@ function App() {
         }
       />
       <Route
-        path="/communities/pending-communities"
+        path="/super-admin/communities/pending-communities"
         element={
           <IsAuth>
             <DefaultLayout>
@@ -115,7 +119,7 @@ function App() {
         }
       />
       <Route
-        path="/communities/approved-communities"
+        path="/super-admin/communities/approved-communities"
         element={
           <IsAuth>
             <DefaultLayout>
@@ -126,7 +130,7 @@ function App() {
         }
       />
       <Route
-        path="/communities/community-detail"
+        path="/super-admin/communities/community-detail"
         element={
           <IsAuth>
             <DefaultLayout>
@@ -137,7 +141,7 @@ function App() {
         }
       />
       <Route
-        path="/communities/add-community"
+        path="/super-admin/communities/add-community"
         element={
           <IsAuth>
             <DefaultLayout>
@@ -343,6 +347,51 @@ function App() {
           </IsAuth>
         }
       />
+
+      <Route
+        path="/alerts/lost-items"
+        element={
+          <IsAuth>
+            <LostItem />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/alerts/community-alerts"
+        element={
+          <IsAuth>
+            <Alert />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/alerts/alert-detail"
+        element={
+          <IsAuth>
+            <AlertDetail />
+          </IsAuth>
+        }
+      />
+
+      {/* //------------------------Featured----------------// */}
+      <Route
+        path="/super-admin/featured/added-featured"
+        element={
+          <IsAuth>
+            <Featured />
+          </IsAuth>
+        }
+      />
+
+      <Route
+        path="/super-admin/featured/add-featured"
+        element={
+          <IsAuth>
+            <AddFeatured />
+          </IsAuth>
+        }
+      />
+
       {/* <Route
           path="/profile"
           element={

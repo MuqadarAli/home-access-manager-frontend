@@ -19,7 +19,7 @@ const ApprovedCommunities: React.FC = () => {
   } = useGetApprovedCommunityQuery(undefined);
 
   const viewHandler = (community: any) => {
-    navigate('/communities/community-detail', { state: { community } });
+    navigate('/super-admin/communities/community-detail', { state: { community } });
   };
 
   function disableHandler(id: any) {

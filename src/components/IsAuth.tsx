@@ -1,9 +1,9 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
-import { RootState } from '../redux/store';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { persister, RootState } from '../redux/store';
 import { useVerifyTokenMutation } from '../redux/rtk-query/auth';
-import { setProfile } from '../redux/slice/auth';
+import { logout, setProfile } from '../redux/slice/auth';
 import CommonLoader from './CommonLoader';
 
 interface IsAuthProps {
@@ -15,9 +15,15 @@ export const IsAuth = ({ children }: IsAuthProps) => {
     (state: RootState) => state.persistedReducer.auth.token,
   );
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [jwt] = useVerifyTokenMutation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -28,10 +34,13 @@ export const IsAuth = ({ children }: IsAuthProps) => {
             dispatch(setProfile(response?.value));
             setIsAuthenticated(true);
           } else {
+            persister.purge();
+            dispatch(logout());
             setIsAuthenticated(false);
           }
         } else {
           setIsAuthenticated(false);
+          navigate('/', { replace: true });
         }
       } catch (error) {
         console.log(
@@ -43,11 +52,31 @@ export const IsAuth = ({ children }: IsAuthProps) => {
     };
 
     verifyToken();
-  }, [token, jwt]);
+  }, [token]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (profile?.community) {
+        // User with community trying to access a super-admin route
+        if (location?.pathname?.startsWith('/super-admin')) {
+          navigate('/dashboard', { replace: true });
+        }
+      } else {
+        // Super-admin trying to access a non-super-admin route
+        if (!location?.pathname?.startsWith('/super-admin')) {
+          navigate('/super-admin/dashboard', { replace: true });
+        }
+      }
+    }
+  }, [isAuthenticated]);
 
   if (isAuthenticated === null) {
     return <CommonLoader />; // Or any loading indicator
   }
 
-  return isAuthenticated ? <>{children}</> : <Navigate to="/" replace />;
+  return isAuthenticated ? (
+    <>{children}</>
+  ) : (
+    <Navigate to={profile?.community ? '/' : '/login'} replace />
+  );
 };

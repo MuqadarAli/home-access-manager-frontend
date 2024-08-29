@@ -93,7 +93,11 @@ const AdminProfile = () => {
                 </h3>
               </div>
               <div className="p-7">
-                <form method="post" onSubmit={handleSubmit(onSubmit)} className='mb-3'>
+                <form
+                  method="post"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mb-3"
+                >
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full xl:w-1/2">
                       <label
@@ -263,7 +267,7 @@ const AdminProfile = () => {
                           htmlFor="community_type"
                           className="mb-3 block text-sm font-medium text-black dark:text-white"
                         >
-                          Select Country
+                          Community Type
                         </label>
 
                         <div className="relative z-20 bg-white dark:bg-form-input">

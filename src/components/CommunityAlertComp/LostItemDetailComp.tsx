@@ -3,13 +3,13 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { useLocation } from 'react-router-dom';
 import { datetimeFormate } from '../../utils/datetimeFormate';
 
-const FoundItemDetailComp: React.FC = () => {
+const LostItemDetailComp: React.FC = () => {
   const locationData = useLocation();
-  const foundItem = locationData.state?.foundItem;
+  const lostItem = locationData.state?.lostItem;
 
   return (
     <>
-      <Breadcrumb pageName="Found Item Detail" />
+      <Breadcrumb pageName="Lost Item Detail" />
 
       <div className="grid grid-cols-5 gap-8">
         <div className="col-span-5 xl:col-span-3">
@@ -19,7 +19,7 @@ const FoundItemDetailComp: React.FC = () => {
                 Name
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.name}
+                {lostItem?.name}
               </dd>
             </div>
             <div className=" px-4 py-6 sm:col-span-1 sm:px-0">
@@ -27,7 +27,7 @@ const FoundItemDetailComp: React.FC = () => {
                 Town
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.town}
+                {lostItem?.town}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -35,40 +35,15 @@ const FoundItemDetailComp: React.FC = () => {
                 Vicinity
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.vicinity}
+                {lostItem?.vicinity}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Found Date
+                Lost Date
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {datetimeFormate(foundItem?.found_date)}
-              </dd>
-            </div>
-
-            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-              <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Recover Place
-              </dt>
-              <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.recover_place}
-              </dd>
-            </div>
-            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-              <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Recovered Address
-              </dt>
-              <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.recovered_address}
-              </dd>
-            </div>
-            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
-              <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Recovered By
-              </dt>
-              <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.recovered_by}
+                {datetimeFormate(lostItem?.lost_date)}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -76,7 +51,7 @@ const FoundItemDetailComp: React.FC = () => {
                 User Name
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {`${foundItem?.user?.first_name} ${foundItem?.user?.last_name}`}
+                {`${lostItem?.user?.first_name} ${lostItem?.user?.last_name}`}
               </dd>
             </div>
 
@@ -85,7 +60,7 @@ const FoundItemDetailComp: React.FC = () => {
                 User Email
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.user?.email}
+                {lostItem?.user?.email}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -93,7 +68,7 @@ const FoundItemDetailComp: React.FC = () => {
                 User Phone
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {foundItem?.user?.primary_phone}
+                {lostItem?.user?.primary_phone}
               </dd>
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -101,7 +76,7 @@ const FoundItemDetailComp: React.FC = () => {
                 Date Of Apply
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {datetimeFormate(foundItem?.created_at)}
+                {datetimeFormate(lostItem?.created_at)}
               </dd>
             </div>
           </dl>
@@ -113,7 +88,7 @@ const FoundItemDetailComp: React.FC = () => {
                 Description
               </h3>
             </div>
-            <div className="py-4 px-7">{foundItem?.description}</div>
+            <div className="py-4 px-7">{lostItem?.description}</div>
           </div>
         </div>
       </div>
@@ -121,4 +96,4 @@ const FoundItemDetailComp: React.FC = () => {
   );
 };
 
-export default FoundItemDetailComp;
+export default LostItemDetailComp;
