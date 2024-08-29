@@ -48,8 +48,16 @@ const SuperAdminLogin: React.FC = () => {
     (state: RootState) => state.persistedReducer.auth.isAuthenticated,
   );
 
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
+
   if (isAuthenticated) {
-    return <Navigate to="/super-admin/dashboard" replace />;
+    if (profile?.community) {
+      return <Navigate to="/dashboard" replace />;
+    } else {
+      return <Navigate to="/super-admin/dashboard" replace />;
+    }
   }
   return (
     <>
@@ -318,7 +326,10 @@ const SuperAdminLogin: React.FC = () => {
 
                   <div className="mt-6 text-center">
                     <p>
-                      <Link to="/forgot-password/super-admin" className="text-primary">
+                      <Link
+                        to="/forgot-password/super-admin"
+                        className="text-primary"
+                      >
                         Forgot password?
                       </Link>
                     </p>

@@ -48,8 +48,16 @@ const Login: React.FC = () => {
     (state: RootState) => state.persistedReducer.auth.isAuthenticated,
   );
 
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
+
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    if (profile?.community) {
+      return <Navigate to="/dashboard" replace />;
+    } else {
+      return <Navigate to="/super-admin/dashboard" replace />;
+    }
   }
   return (
     <>
@@ -204,7 +212,11 @@ const Login: React.FC = () => {
                   Community Admin Login
                 </h2>
 
-                <form method="post" onSubmit={handleSubmit(onSubmit)} className='mb-3'>
+                <form
+                  method="post"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="mb-3"
+                >
                   <div className="mb-4">
                     <label
                       htmlFor="email"
@@ -314,7 +326,10 @@ const Login: React.FC = () => {
 
                   <div className="mt-6 text-center">
                     <p>
-                      <Link to="/forgot-password/admin" className="text-primary">
+                      <Link
+                        to="/forgot-password/admin"
+                        className="text-primary"
+                      >
                         Forgot password?
                       </Link>
                     </p>

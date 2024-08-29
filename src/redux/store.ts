@@ -26,6 +26,9 @@ import { productApi } from './rtk-query/product';
 import { businessApi } from './rtk-query/business';
 import { vehicleApi } from './rtk-query/vehicle';
 import { foundItemApi } from './rtk-query/foundItems';
+import { lostItemApi } from './rtk-query/lostItem';
+import { alertApi } from './rtk-query/alert';
+import { featuredApi } from './rtk-query/featured';
 
 export const resetStoreAction = createAction('RESET_STORE');
 const persistConfig = {
@@ -59,6 +62,9 @@ export const store = configureStore({
     [businessApi.reducerPath]: businessApi.reducer,
     [vehicleApi.reducerPath]: vehicleApi.reducer,
     [foundItemApi.reducerPath]: foundItemApi.reducer,
+    [lostItemApi.reducerPath]: lostItemApi.reducer,
+    [alertApi.reducerPath]: alertApi.reducer,
+    [featuredApi.reducerPath]: featuredApi.reducer,
     persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -76,6 +82,9 @@ export const store = configureStore({
       businessApi.middleware,
       vehicleApi.middleware,
       foundItemApi.middleware,
+      lostItemApi.middleware,
+      alertApi.middleware,
+      featuredApi.middleware,
     ),
 });
 

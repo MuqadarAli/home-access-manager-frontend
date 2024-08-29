@@ -100,7 +100,7 @@ const FoundItemComp: React.FC = () => {
                         <button
                           className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
                           id="view-button"
-                          onClick={() => viewHandler(foundItem?.id)}
+                          onClick={() => viewHandler(foundItem)}
                         >
                           <SlEye size={20} />
                         </button>
@@ -114,7 +114,7 @@ const FoundItemComp: React.FC = () => {
         </div>
         {deleteModal && (
           <DeleteModal
-            name="FoundItem"
+            name="Found Item"
             setModal={setDeleteModal}
             id={currentId}
           />

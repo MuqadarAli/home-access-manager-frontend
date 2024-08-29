@@ -4,6 +4,9 @@ import Loader from '../Loader';
 import SuccessAlert from '../Alert/SuccessAlert';
 import ErrorAlert from '../Alert/ErrorAlert';
 import { useDeleteFoundItemMutation } from '../../redux/rtk-query/foundItems';
+import { useDeleteLostItemMutation } from '../../redux/rtk-query/lostItem';
+import { useDeleteAlertMutation } from '../../redux/rtk-query/alert';
+import { useDeleteFeaturedMutation } from '../../redux/rtk-query/featured';
 
 type DeleteModalType = {
   id: string;
@@ -16,6 +19,22 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
   const cancelButtonRef = useRef(null);
   const [deleteFoundItem, { isError, isLoading, isSuccess }] =
     useDeleteFoundItemMutation();
+  const [
+    deleteLostItem,
+    { isError: lostError, isLoading: lostLoading, isSuccess: lostSuccess },
+  ] = useDeleteLostItemMutation();
+  const [
+    deleteAlert,
+    { isError: alertError, isLoading: alertLoading, isSuccess: alertSuccess },
+  ] = useDeleteAlertMutation();
+  const [
+    deleteFeatured,
+    {
+      isError: featuredError,
+      isLoading: featuredLoading,
+      isSuccess: featuredSuccess,
+    },
+  ] = useDeleteFeaturedMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -25,8 +44,29 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
   const deleteHandler = async (id: string) => {
     try {
       switch (name) {
-        case 'FoundItem':
+        case 'Found Item':
           await deleteFoundItem({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Lost Item':
+          await deleteLostItem({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Alert':
+          await deleteAlert({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Featured':
+          await deleteFeatured({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -75,7 +115,7 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md sm:p-6">
                 <Dialog.Title as="h3" className="leading-6 font-medium mb-5">
-                  {`Do You Want To Approve ${name}?`}
+                  {`Do You Want To Delete ${name}?`}
                 </Dialog.Title>
                 <div className="flex gap-3 mt-3">
                   <button
@@ -86,18 +126,33 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                   </button>
                   <button
                     onClick={() => deleteHandler(id)}
-                    disabled={isLoading}
+                    disabled={
+                      isLoading ||
+                      lostLoading ||
+                      alertLoading ||
+                      featuredLoading
+                    }
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
-                    {!isLoading ? 'Delete' : <Loader />}
+                    {!isLoading ||
+                    !lostLoading ||
+                    !alertLoading ||
+                    !featuredLoading ? (
+                      'Delete'
+                    ) : (
+                      <Loader />
+                    )}
                   </button>
                 </div>
-                {isSuccess && (
+                {(isSuccess ||
+                  lostSuccess ||
+                  alertSuccess ||
+                  featuredSuccess) && (
                   <div id="delete-alert" className="mt-3">
                     <SuccessAlert name={name} action="Delete" />
                   </div>
                 )}
-                {isError && (
+                {(isError || lostError || alertError || featuredError) && (
                   <div id="error-delete-alert" className="mt-3">
                     <ErrorAlert />
                   </div>

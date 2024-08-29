@@ -1,40 +1,39 @@
 import React, { useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { IoMdCheckmark } from 'react-icons/io';
-import { RxCross2 } from 'react-icons/rx';
+import Breadcrumb from '../Breadcrumbs/Breadcrumb';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate } from 'react-router-dom';
-import { useGetPendingCommunityQuery } from '../../redux/rtk-query/community';
-import Loader from '../../components/Loader';
-import { ApproveModal } from '../../components/Modal/ApproveModal';
-import { DisableModal } from '../../components/Modal/DisableModal';
+import Loader from '../Loader';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { DeleteModal } from '../Modal/DeleteModal';
+import { useGetLostItemsForCommunityQuery } from '../../redux/rtk-query/lostItem';
 
-const PendingCommunities: React.FC = () => {
-  const [approveModal, setApproveModal] = useState<boolean>(false);
-  const [disableModal, setDisableModal] = useState<boolean>(false);
+const LostItemComp: React.FC = () => {
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
-  const navigate = useNavigate();
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
+  const community_id = profile?.community?.id;
   const {
-    data: communities,
+    data: lostItems,
     isError,
     isLoading,
-  } = useGetPendingCommunityQuery(undefined);
-  const viewHandler = (community: any) => {
-    navigate('/super-admin/communities/community-detail', { state: { community } });
+  } = useGetLostItemsForCommunityQuery(community_id);
+
+  const navigate = useNavigate();
+  const viewHandler = (lostItem: any) => {
+    navigate('/alerts/lost-items/lost-item-detail', { state: { lostItem } });
   };
 
-  function approveHandler(id: any) {
-    setApproveModal(!approveModal);
-    setCurrentId(id);
-  }
-
-  function disableHandler(id: any) {
-    setDisableModal(!disableModal);
+  function deleteHandler(id: any) {
+    setDeleteModal(!deleteModal);
     setCurrentId(id);
   }
   return (
     <>
-      <Breadcrumb pageName="Pending Communities" />
+      <Breadcrumb pageName="Lost Items" />
       <div>{isLoading && <Loader />}</div>
       <div>
         {isError && (
@@ -53,13 +52,13 @@ const PendingCommunities: React.FC = () => {
                     Name
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
-                    Community Type
+                    Town
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    City
+                    Vicinity
                   </th>
                   <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                    Admin
+                    User Name
                   </th>
                   <th className="py-4 px-4 font-medium text-black dark:text-white">
                     Actions
@@ -67,52 +66,41 @@ const PendingCommunities: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {communities?.value?.map((community: any, key: number) => (
+                {lostItems?.value?.map((lostItem: any, key: number) => (
                   <tr key={key}>
                     <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                      <p className="font-medium text-black dark:text-white">
-                        {community?.name}
+                      <p className=" text-black dark:text-white">
+                        {lostItem?.name}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community?.community_type?.name}
+                        {lostItem?.town}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community?.city}
+                        {lostItem?.vicinity}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <p className="text-black dark:text-white">
-                        {community?.admin?.full_name}
+                        {`${lostItem?.user?.first_name} ${lostItem?.user?.last_name}`}
                       </p>
                     </td>
                     <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                       <div className="flex items-center space-x-3.5">
                         <button
-                          className="hover:text-primary bg-green-400 hover:bg-slate-100 rounded-full p-1"
-                          id="mark-button"
-                          onClick={() => {
-                            approveHandler(community?.id);
-                          }}
-                        >
-                          <IoMdCheckmark size={20} className="text-white" />
-                        </button>
-                        <button
                           className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
+                          onClick={() => deleteHandler(lostItem?.id)}
                           id="cross-button"
-                          onClick={() => {
-                            disableHandler(community?.id);
-                          }}
                         >
-                          <RxCross2 size={20} className="text-white" />
+                          <RiDeleteBin6Line size={20} className="text-white" />
                         </button>
                         <button
                           className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
                           id="view-button"
-                          onClick={() => viewHandler(community)}
+                          onClick={() => viewHandler(lostItem)}
                         >
                           <SlEye size={20} />
                         </button>
@@ -124,17 +112,10 @@ const PendingCommunities: React.FC = () => {
             </table>
           </div>
         </div>
-        {approveModal && (
-          <ApproveModal
-            name="Community"
-            setModal={setApproveModal}
-            id={currentId}
-          />
-        )}
-        {disableModal && (
-          <DisableModal
-            name="Community"
-            setModal={setDisableModal}
+        {deleteModal && (
+          <DeleteModal
+            name="Lost Item"
+            setModal={setDeleteModal}
             id={currentId}
           />
         )}
@@ -143,4 +124,4 @@ const PendingCommunities: React.FC = () => {
   );
 };
 
-export default PendingCommunities;
+export default LostItemComp;

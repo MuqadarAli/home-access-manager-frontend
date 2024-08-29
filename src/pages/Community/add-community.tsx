@@ -113,7 +113,7 @@ const AddCommunity: React.FC = () => {
                         htmlFor="community_type"
                         className="mb-3 text-base block text-black dark:text-white"
                       >
-                        Select Country <span className="text-meta-1">*</span>
+                        Community Type <span className="text-meta-1">*</span>
                       </label>
 
                       <div className="relative z-20 bg-white dark:bg-form-input">
