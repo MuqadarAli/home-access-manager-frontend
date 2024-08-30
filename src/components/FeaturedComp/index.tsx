@@ -59,11 +59,13 @@ const AddFeaturedComp: React.FC = () => {
                         key={featured?.id}
                         className="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white"
                       >
-                        <div className="aspect-h-4 aspect-w-3 bg-gray-200 sm:aspect-none sm:h-96">
+                        <div className="bg-gray-200 h-full w-full">
+                          {' '}
+                          {/* Adjust width and height as needed */}
                           <img
                             alt={featured?.title}
                             src={featured?.image_url}
-                            className=""
+                            className="w-full h-full object-contain"
                           />
                         </div>
                         <div className="flex flex-1 flex-col space-y-2 p-4">
