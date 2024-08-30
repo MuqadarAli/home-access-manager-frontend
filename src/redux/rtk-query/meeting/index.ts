@@ -5,54 +5,54 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 //     ? import.meta.env.VITE_DEV_URL
 //     : import.meta.env.VITE_PRO_URL;
 const baseUrl = 'https://api.homeaccessmanager.com';
-export const featuredApi = createApi({
-  reducerPath: 'featuredApi',
+export const meetingApi = createApi({
+  reducerPath: 'meetingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${baseUrl}/featured/`,
+    baseUrl: `${baseUrl}/meeting/`,
   }),
-  tagTypes: ['featured'],
+  tagTypes: ['meeting'],
 
   endpoints: (builder) => ({
-    addFeatured: builder.mutation({
+    addMeeting: builder.mutation({
       query: (body) => ({
         url: '',
         method: 'POST',
         body: body,
       }),
-      invalidatesTags: ['featured'],
+      invalidatesTags: ['meeting'],
     }),
 
-    updateFeatured: builder.mutation({
+    updateMeeting: builder.mutation({
       query: (body) => ({
         url: '',
         method: 'PATCH',
         body: body,
       }),
-      invalidatesTags: ['featured'],
+      invalidatesTags: ['meeting'],
     }),
 
-    getFeatured: builder.query({
-      query: () => ({
-        url: '',
+    getMeeting: builder.query({
+      query: (community_id) => ({
+        url: `${community_id}`,
         method: 'GET',
       }),
-      providesTags: ['featured'],
+      providesTags: ['meeting'],
     }),
 
-    deleteFeatured: builder.mutation({
+    deleteMeeting: builder.mutation({
       query: (body) => ({
         url: ``,
         method: 'DELETE',
         body: body,
       }),
-      invalidatesTags: ['featured'],
+      invalidatesTags: ['meeting'],
     }),
   }),
 });
 
 export const {
-  useAddFeaturedMutation,
-  useUpdateFeaturedMutation,
-  useGetFeaturedQuery,
-  useDeleteFeaturedMutation,
-} = featuredApi;
+  useAddMeetingMutation,
+  useUpdateMeetingMutation,
+  useGetMeetingQuery,
+  useDeleteMeetingMutation,
+} = meetingApi;

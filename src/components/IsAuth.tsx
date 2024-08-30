@@ -43,6 +43,9 @@ export const IsAuth = ({ children }: IsAuthProps) => {
           navigate('/', { replace: true });
         }
       } catch (error) {
+        profile?.community ? navigate('/') : navigate('/login');
+        persister.purge();
+        dispatch(logout());
         console.log(
           'Token verification failed, setting isAuthenticated to false',
           error,

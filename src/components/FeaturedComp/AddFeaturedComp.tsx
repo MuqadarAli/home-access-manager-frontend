@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { useCommunityRegistrationMutation } from '../../redux/rtk-query/community';
 import Loader from '../../components/Loader';
 import { useForm } from 'react-hook-form';
 import SuccessMessage from '../../components/Alert/SuccessMessage';
 import ErrorMessage from '../../components/Alert/ErrorMessage';
 import { IoMdAdd, IoMdClose } from 'react-icons/io'; // Importing icons from react-icons
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
+import { useAddFeaturedMutation } from '../../redux/rtk-query/featured';
 
 type AddFeaturedType = {
   title: string;
   image: File;
   description: string;
+  super_admin_id: string;
 };
 
 const AddFeaturedComp: React.FC = () => {
@@ -20,8 +23,8 @@ const AddFeaturedComp: React.FC = () => {
   const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
 
-  const [addCommunity, { isSuccess, isLoading, isError }] =
-    useCommunityRegistrationMutation();
+  const [addFeatured, { isSuccess, isLoading, isError }] =
+    useAddFeaturedMutation();
 
   const {
     handleSubmit,
@@ -38,11 +41,10 @@ const AddFeaturedComp: React.FC = () => {
   }, [imagePreview]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Clean up the previous image URL if there was one
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
     const file = event.target.files?.[0];
     if (file) {
       setImagePreview(URL.createObjectURL(file));
+      onChange(event); // This will ensure react-hook-form registers the file
     }
   };
 
@@ -51,14 +53,36 @@ const AddFeaturedComp: React.FC = () => {
     setImagePreview(null); // Remove the image preview
   };
 
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
+  const super_admin_id = profile?.id;
+
+  const { onChange, ...rest } = register('image', {
+    required: 'This field is required',
+  });
+
   const onSubmit: any = async (data: any) => {
     try {
+      console.log('Submitted Data:', data);
       const formData = new FormData();
       formData.append('title', data.title);
+      formData.append('super_admin_id', data.super_admin_id);
       formData.append('description', data.description);
-      if (data.image[0]) formData.append('image', data.image[0]);
 
-      const response = await addCommunity(formData).unwrap();
+      if (data.image && data.image[0]) {
+        formData.append('image', data.image[0]); // Append the first file
+      } else {
+        console.error('No image selected or image field is empty');
+      }
+
+      // Log FormData entries to verify
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+      console.log(formData);
+
+      const response = await addFeatured(formData).unwrap();
       if (response?.statusCode === 201) {
         setAddSuccess(response.message);
         setShowSuccessMessage(true);
@@ -76,7 +100,7 @@ const AddFeaturedComp: React.FC = () => {
   return (
     <>
       <Breadcrumb pageName="Add Featured" />
-      <div>{isLoading && <Loader />}</div>
+      {/* <div>{isLoading && <Loader />}</div> */}
       <div>
         {isError && (
           <p className="text-lg leading-6 font-medium text-red-500">
@@ -92,6 +116,12 @@ const AddFeaturedComp: React.FC = () => {
             </h3>
           </div>
           <form className="p-6.5" onSubmit={handleSubmit(onSubmit)}>
+            <input
+              type="text"
+              {...register('super_admin_id')}
+              value={super_admin_id}
+              className="hidden"
+            />
             <div className="lg:flex w-full gap-10">
               <div className="mb-4.5 flex flex-col gap-6 lg:w-8/12">
                 {/* Title Input */}
@@ -151,21 +181,21 @@ const AddFeaturedComp: React.FC = () => {
               </div>
               {/* Image Upload and Preview */}
               <div>
-                <div className="flex lg:w-100 lg:h-100 flex-col border border-dashed justify-center items-center">
+                <div className="flex w-full h-full lg:w-70 lg:h-70 xl:w-100 xl:h-100 flex-col border border-dashed justify-center items-center ">
                   {imagePreview ? (
-                    <div className="flex relative bg-black flex-col ">
+                    <div className="flex relative  flex-col pb-4">
                       <div className="flex justify-end">
                         <IoMdClose
                           onClick={removeImage}
                           size={24}
-                          className="text-red-500 z-10 relative right-3 top-7 cursor-pointer"
+                          className="text-red-500 z-10 bg-white rounded-full relative right-3 top-7 cursor-pointer"
                         />
                       </div>
 
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        className="mb-2 w-96 h-96 object-cover"
+                        className="mb-2 lg:w-67 lg:h-67 xl:w-96 xl:h-96  object-contain"
                       />
                     </div>
                   ) : (
@@ -181,6 +211,7 @@ const AddFeaturedComp: React.FC = () => {
                         type="file"
                         id="image"
                         accept="image/*"
+                        {...rest}
                         {...register('image')}
                         onChange={handleFileChange}
                         className="hidden"

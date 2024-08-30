@@ -51,6 +51,10 @@ import { Alert } from './pages/CommunityAlert/Alert';
 import { AlertDetail } from './pages/CommunityAlert/AlertDetail';
 import { Featured } from './pages/Featured';
 import { AddFeatured } from './pages/Featured/AddFeatured';
+import { Meeting } from './pages/Meeting';
+import { MeetingDetail } from './pages/Meeting/MeetingDetail';
+import { AddMeeting } from './pages/Meeting/AddMeeting';
+import { PageNotFound } from './pages/PageNotFound';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -391,6 +395,37 @@ function App() {
           </IsAuth>
         }
       />
+
+      {/* //------------------------Meeting----------------// */}
+      <Route
+        path="/meeting/added-meeting"
+        element={
+          <IsAuth>
+            <Meeting />
+          </IsAuth>
+        }
+      />
+
+      <Route
+        path="/meeting/meeting-detail"
+        element={
+          <IsAuth>
+            <MeetingDetail />
+          </IsAuth>
+        }
+      />
+
+      <Route
+        path="/meeting/add-meeting"
+        element={
+          <IsAuth>
+            <AddMeeting />
+          </IsAuth>
+        }
+      />
+
+      {/* Page Not Found */}
+      <Route path="*" element={<PageNotFound />}></Route>
 
       {/* <Route
           path="/profile"
