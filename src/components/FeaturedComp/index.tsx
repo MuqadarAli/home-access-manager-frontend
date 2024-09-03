@@ -6,8 +6,10 @@ import { RootState } from '../../redux/store';
 import { useGetFeaturedQuery } from '../../redux/rtk-query/featured';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { DeleteModal } from '../Modal/DeleteModal';
+import { CiEdit } from 'react-icons/ci';
+import { useNavigate } from 'react-router-dom';
 
-const AddFeaturedComp: React.FC = () => {
+const AddedFeaturedComp: React.FC = () => {
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
   const profile = useSelector(
@@ -25,6 +27,11 @@ const AddFeaturedComp: React.FC = () => {
     setCurrentId(id);
   }
 
+  const navigate = useNavigate();
+  function updateHandler(featured: any) {
+    navigate('/super-admin/featured/update-featured', { state: { featured } });
+  }
+
   return (
     <>
       <Breadcrumb pageName="Featured" />
@@ -36,7 +43,7 @@ const AddFeaturedComp: React.FC = () => {
           </p>
         )}
       </div>
-      {featuredList?.statusCode === 200 && (
+      {(featuredList?.statusCode === 200 && !isLoading ) && (
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="rounded-sm border border-stroke bg-white px-5  shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
             <div className="max-w-full overflow-x-auto">
@@ -44,9 +51,15 @@ const AddFeaturedComp: React.FC = () => {
                 <div className="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
                   {featuredList?.value?.map((featured: any) => (
                     <div>
-                      <div className="relative top-10 z-50 right-3 flex justify-end">
+                      <div className="relative top-10 z-50 gap-3 right-3 flex justify-end">
                         <button
-                          className=" bg-white rounded-full p-1"
+                          className=" bg-white rounded-full p-1 hover:bg-slate-200"
+                          onClick={() => updateHandler(featured)}
+                        >
+                          <CiEdit size={20} className="text-blue-600" />
+                        </button>
+                        <button
+                          className=" bg-white rounded-full p-1 hover:bg-slate-200"
                           onClick={() => deleteHandler(featured?.id)}
                         >
                           <RiDeleteBin6Line
@@ -102,4 +115,4 @@ const AddFeaturedComp: React.FC = () => {
   );
 };
 
-export default AddFeaturedComp;
+export default AddedFeaturedComp;

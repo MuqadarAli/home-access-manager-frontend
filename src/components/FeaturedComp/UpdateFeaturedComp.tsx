@@ -7,31 +7,42 @@ import ErrorMessage from '../../components/Alert/ErrorMessage';
 import { IoMdAdd, IoMdClose } from 'react-icons/io'; // Importing icons from react-icons
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { useAddFeaturedMutation } from '../../redux/rtk-query/featured';
+import { useUpdateFeaturedMutation } from '../../redux/rtk-query/featured';
+import { useLocation } from 'react-router-dom';
 
 type AddFeaturedType = {
+  id: string;
   title: string;
   image: File;
   description: string;
   super_admin_id: string;
 };
 
-const AddFeaturedComp: React.FC = () => {
+const UpdateFeaturedComp: React.FC = () => {
+  const locationData = useLocation();
+  const featured = locationData.state?.featured;
   const [addError, setAddError] = useState<string | null>(null);
   const [addSuccess, setAddSuccess] = useState<string | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview
+  const [imagePreview, setImagePreview] = useState<string | null>(null || featured?.image_url); 
 
-  const [addFeatured, { isSuccess, isLoading, isError }] =
-    useAddFeaturedMutation();
+  const [updateFeatured, { isSuccess, isLoading, isError }] =
+    useUpdateFeaturedMutation();
 
   const {
     handleSubmit,
-    reset,
     register,
     formState: { errors },
-  } = useForm<AddFeaturedType>();
+  } = useForm<AddFeaturedType>({
+    defaultValues:{
+      id: featured?.id,
+      title: featured?.title,
+      image: featured?.image_url || File,
+      description: featured?.description,
+      super_admin_id: featured?.super_admin?.id,
+    }
+  });
 
   useEffect(() => {
     // Clean up the image URL to avoid memory leaks
@@ -64,24 +75,24 @@ const AddFeaturedComp: React.FC = () => {
 
   const onSubmit: any = async (data: any) => {
     try {
-      console.log('Submitted Data:', data);
       const formData = new FormData();
       formData.append('title', data.title);
+      formData.append('id', data.id);
       formData.append('super_admin_id', data.super_admin_id);
       formData.append('description', data.description);
-
-      if (data.image && data.image[0]) {
+      
+      if (data.image && data.image[0] && data.image != featured?.image_url) {
         formData.append('image', data.image[0]); // Append the first file
       } else {
         console.error('No image selected or image field is empty');
       }
 
-      const response = await addFeatured(formData).unwrap();
-      if (response?.statusCode === 201) {
+      const response = await updateFeatured(formData).unwrap();
+      if (response?.statusCode === 200) {
         setAddSuccess(response.message);
         setShowSuccessMessage(true);
-        reset();
-        removeImage(); // Clean up on successful submission
+        // reset();
+        // removeImage();
       } else {
         setAddError(response.message);
         setShowErrorMessage(true);
@@ -93,7 +104,7 @@ const AddFeaturedComp: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb pageName="Add Featured" />
+      <Breadcrumb pageName="Update Featured" />
       {/* <div>{isLoading && <Loader />}</div> */}
       <div>
         {isError && (
@@ -103,10 +114,10 @@ const AddFeaturedComp: React.FC = () => {
         )}
       </div>
       <div className="flex flex-col gap-9">
-        <div className=" rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
             <h3 className="font-medium text-lg text-black dark:text-white">
-              Featured Form
+              Update Featured Form
             </h3>
           </div>
           <form className="p-6.5" onSubmit={handleSubmit(onSubmit)}>
@@ -114,6 +125,12 @@ const AddFeaturedComp: React.FC = () => {
               type="text"
               {...register('super_admin_id')}
               value={super_admin_id}
+              className="hidden"
+            />
+            <input
+              type="text"
+              {...register('id')}
+              value={featured?.id}
               className="hidden"
             />
             <div className="lg:flex w-full gap-10">
@@ -246,4 +263,4 @@ const AddFeaturedComp: React.FC = () => {
   );
 };
 
-export default AddFeaturedComp;
+export default UpdateFeaturedComp;

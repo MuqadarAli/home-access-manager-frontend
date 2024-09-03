@@ -63,6 +63,8 @@ const AdminProfile = () => {
       const response = await updateCommunityProfile(data).unwrap();
       if (response?.statusCode == 200) {
         setAddSuccess(response?.message);
+        console.log('response', response);
+        
         dispatch(updateProfile(response?.value));
         setShowSuccessMessage(true);
       } else {
