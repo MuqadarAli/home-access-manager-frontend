@@ -55,6 +55,8 @@ import { Meeting } from './pages/Meeting';
 import { MeetingDetail } from './pages/Meeting/MeetingDetail';
 import { AddMeeting } from './pages/Meeting/AddMeeting';
 import { PageNotFound } from './pages/PageNotFound';
+import { UpdateFeatured } from './pages/Featured/UpdateFeatured';
+import { LostItemDetail } from './pages/CommunityAlert/LostItemDetail';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -353,6 +355,15 @@ function App() {
       />
 
       <Route
+        path="/alerts/lost-items/lost-item-detail"
+        element={
+          <IsAuth>
+            <LostItemDetail />
+          </IsAuth>
+        }
+      />
+
+      <Route
         path="/alerts/lost-items"
         element={
           <IsAuth>
@@ -392,6 +403,15 @@ function App() {
         element={
           <IsAuth>
             <AddFeatured />
+          </IsAuth>
+        }
+      />
+
+      <Route
+        path="/super-admin/featured/update-featured"
+        element={
+          <IsAuth>
+            <UpdateFeatured />
           </IsAuth>
         }
       />

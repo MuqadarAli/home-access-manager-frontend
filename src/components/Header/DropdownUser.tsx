@@ -11,6 +11,8 @@ const DropdownUser = () => {
   const profile = useSelector(
     (state: RootState) => state.persistedReducer.auth.profile,
   );
+  console.log('profile' ,profile);
+  
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();

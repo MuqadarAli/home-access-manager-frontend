@@ -50,7 +50,7 @@ const PendingBusinessComp: React.FC = () => {
           </p>
         )}
       </div>
-      <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      {!isLoading && <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
           <div className="max-w-full overflow-x-auto">
             <table className="w-full table-auto mb-5">
@@ -133,7 +133,7 @@ const PendingBusinessComp: React.FC = () => {
         {disableModal && (
           <DisableModal name="Business" setModal={setDisableModal} id={currentId} />
         )}
-      </div>
+      </div>}
     </>
   );
 };
