@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
-// import { IoMdCheckmark } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -9,12 +8,15 @@ import Loader from '../Loader';
 import { DisableModal } from '../Modal/DisableModal';
 
 const ApprovedAirbnbComp: React.FC = () => {
-  const profile = useSelector(
-    (state: RootState) => state.persistedReducer.auth.profile,
+  const profile = useSelector((state: RootState) => state.persistedReducer.auth.profile);
+  const communityId = useSelector(
+    (state: RootState) => state.persistedReducer.auth.community_id,
   );
-  const community_id = profile?.community?.id;
+  
+  const community_id = profile?.community?.id || communityId;
   const [disableModal, setDisableModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
+  const [filterDate, setFilterDate] = useState<string>('');
 
   const {
     data: airbnbList,
@@ -26,6 +28,18 @@ const ApprovedAirbnbComp: React.FC = () => {
     setDisableModal(!disableModal);
     setCurrentId(id);
   }
+
+  // Filter Airbnb records where the selected date falls between the from and to dates
+  const filteredAirbnbList = useMemo(() => {
+    if (!filterDate) return airbnbList?.value; // No filtering if date is not set
+    return airbnbList?.value?.filter((airbnb: any) => {
+      const from = new Date(airbnb.from_date);
+      const to = new Date(airbnb.to_date);
+      const selected = new Date(filterDate);
+      return selected >= from && selected <= to;
+    });
+  }, [airbnbList, filterDate]);
+
   return (
     <>
       <Breadcrumb pageName="Approved Airbnb" />
@@ -37,17 +51,24 @@ const ApprovedAirbnbComp: React.FC = () => {
           </p>
         )}
       </div>
+      <input
+        type="date"
+        value={filterDate}
+        onChange={e => setFilterDate(e.target.value)}
+        className="mb-4 p-2 border rounded"
+        placeholder="Filter by Date"
+      />
       {!isLoading && (
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
             <div className="max-w-full overflow-x-auto">
               <table className="w-full table-auto mb-5">
                 <thead>
-                  <tr className="bg-gray-2  text-left dark:bg-meta-4">
-                    <th className="min-w-[220px]  py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                       First Name
                     </th>
-                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
+                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                       Last Name
                     </th>
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
@@ -62,7 +83,7 @@ const ApprovedAirbnbComp: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {airbnbList?.value?.map((airbnb: any, key: number) => (
+                  {filteredAirbnbList?.map((airbnb: any, key: number) => (
                     <tr key={key}>
                       <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                         <p className="font-medium text-black dark:text-white">

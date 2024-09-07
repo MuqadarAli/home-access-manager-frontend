@@ -57,7 +57,7 @@ const UserDetailComp: React.FC = () => {
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                User Name
+                Owner Name
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
                 {`${vehicle?.user?.first_name} ${vehicle?.user?.last_name}`}

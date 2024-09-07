@@ -109,12 +109,28 @@ const FoundItemDetailComp: React.FC = () => {
         <div className="col-span-5 xl:col-span-2">
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-              <h3 className="font-medium text-black dark:text-white">
-                Description
-              </h3>
+              <h3 className="font-medium text-black dark:text-white">Image</h3>
             </div>
-            <div className="py-4 px-7">{foundItem?.description}</div>
+            {foundItem?.image_url && (
+              <div className="p-7">
+                <img
+                  alt="product-image"
+                  src={foundItem?.image_url}
+                  className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
+                ></img>
+              </div>
+            )}
           </div>
+          {
+            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+              <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+                <h3 className="font-medium text-black dark:text-white">
+                  Description
+                </h3>
+              </div>
+              <div className="py-4 px-7">{foundItem?.description}</div>
+            </div>
+          }
         </div>
       </div>
     </>

@@ -11,6 +11,8 @@ interface IsAuthProps {
 }
 
 export const IsAuth = ({ children }: IsAuthProps) => {
+  console.log('Auth');
+
   const token = useSelector(
     (state: RootState) => state.persistedReducer.auth.token,
   );
@@ -22,8 +24,9 @@ export const IsAuth = ({ children }: IsAuthProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   const profile = useSelector(
-    (state: RootState) => state.persistedReducer.auth.profile,
+    (state: RootState) => state?.persistedReducer?.auth?.profile,
   );
+  console.log('role',profile?.role);
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -59,7 +62,8 @@ export const IsAuth = ({ children }: IsAuthProps) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (profile?.community) {
+      
+      if (profile?.role === 'admin') {
         // User with community trying to access a super-admin route
         if (location?.pathname?.startsWith('/super-admin')) {
           navigate('/dashboard', { replace: true });
@@ -74,7 +78,7 @@ export const IsAuth = ({ children }: IsAuthProps) => {
     }
   }, [isAuthenticated]);
 
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null || !profile) {
     return <CommonLoader />; // Or any loading indicator
   }
 

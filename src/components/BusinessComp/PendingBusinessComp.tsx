@@ -18,7 +18,10 @@ const PendingBusinessComp: React.FC = () => {
   const profile = useSelector(
     (state: RootState) => state.persistedReducer.auth.profile,
   );
-  const community_id = profile?.community?.id;
+  const communityId = useSelector(
+    (state: RootState) => state.persistedReducer.auth.community_id,
+  );
+  const community_id = profile?.community?.id || communityId;
   const {
     data: businesses,
     isError,

@@ -104,7 +104,7 @@ const VisitorDetailComp: React.FC = () => {
                 {'Checked In'}
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {visitor?.isApprove && (visitor?.isCheckedIn ? 'Yes' : 'No')}
+                {visitor?.isApprove && (visitor?.isCheckedIn ? 'Yes' : 'Not Yet')}
               </dd>
             </div>
           </dl>

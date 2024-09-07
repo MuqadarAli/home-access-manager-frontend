@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { IoMdCheckmark } from 'react-icons/io';
-import { RxCross2 } from 'react-icons/rx';
+import Breadcrumb from '../Breadcrumbs/Breadcrumb';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate } from 'react-router-dom';
-import { useGetPendingUsersForCommunityQuery } from '../../redux/rtk-query/user';
 import Loader from '../Loader';
-import { ApproveModal } from '../Modal/ApproveModal';
-import { DisableModal } from '../Modal/DisableModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+// import { useGetFoundItemsForCommunityQuery } from '../../redux/rtk-query/foundItems';
+import { DeleteModal } from '../Modal/DeleteModal';
+import { useGetCommunityLeaderQuery } from '../../redux/rtk-query/communityLeader';
 
-const PendingUsersComp: React.FC = () => {
-  const [approveModal, setApproveModal] = useState<boolean>(false);
-  const [disableModal, setDisableModal] = useState<boolean>(false);
+const CommunityLeaderComp: React.FC = () => {
+  const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
   const profile = useSelector(
     (state: RootState) => state.persistedReducer.auth.profile,
@@ -24,28 +22,23 @@ const PendingUsersComp: React.FC = () => {
   
   const community_id = profile?.community?.id || communityId;
   const {
-    data: users,
+    data: community_leader,
     isError,
     isLoading,
-  } = useGetPendingUsersForCommunityQuery(community_id);
+  } = useGetCommunityLeaderQuery(community_id);
 
   const navigate = useNavigate();
-  const viewHandler = (user: any) => {
-    navigate('/users/user-detail', { state: { user } });
+  const viewHandler = (communityLeader: any) => {
+    navigate('/community-leader/detail', { state: { communityLeader } });
   };
 
-  function approveHandler(id: any) {
-    setApproveModal(!approveModal);
-    setCurrentId(id);
-  }
-
-  function disableHandler(id: any) {
-    setDisableModal(!disableModal);
+  function deleteHandler(id: any) {
+    setDeleteModal(!deleteModal);
     setCurrentId(id);
   }
   return (
     <>
-      <Breadcrumb pageName="Pending Users" />
+      <Breadcrumb pageName="Community Leaders" />
       <div>{isLoading && <Loader />}</div>
       <div>
         {isError && (
@@ -62,16 +55,13 @@ const PendingUsersComp: React.FC = () => {
                 <thead>
                   <tr className="bg-gray-2 text-left dark:bg-meta-4">
                     <th className="min-w-[220px]  py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                      First Name
+                      Name
                     </th>
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
-                      Last Name
-                    </th>
-                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                       Email
                     </th>
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                      Phone Number
+                      Role
                     </th>
                     <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Actions
@@ -79,48 +69,40 @@ const PendingUsersComp: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users?.value?.map((user: any, key: number) => (
+                  {community_leader?.value?.map((foundItem: any, key: number) => (
                     <tr key={key}>
                       <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                         <p className=" text-black dark:text-white">
-                          {user?.first_name}
+                          {foundItem?.name}
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="text-black dark:text-white">
-                          {user?.last_name}
+                          {foundItem?.email}
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="text-black dark:text-white">
-                          {user.email}
+                          {foundItem?.role}
                         </p>
                       </td>
-                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-                        <p className="text-black dark:text-white">
-                          {user?.primary_phone}
-                        </p>
-                      </td>
+                      
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
                           <button
-                            className="hover:text-primary bg-green-400 hover:bg-slate-100 rounded-full p-1"
-                            onClick={() => approveHandler(user?.id)}
-                            id="mark-button"
-                          >
-                            <IoMdCheckmark size={20} className="text-white" />
-                          </button>
-                          <button
                             className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
-                            onClick={() => disableHandler(user?.id)}
+                            onClick={() => deleteHandler(foundItem?.id)}
                             id="cross-button"
                           >
-                            <RxCross2 size={20} className="text-white" />
+                            <RiDeleteBin6Line
+                              size={20}
+                              className="text-white"
+                            />
                           </button>
                           <button
                             className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
                             id="view-button"
-                            onClick={() => viewHandler(user)}
+                            onClick={() => viewHandler(foundItem)}
                           >
                             <SlEye size={20} />
                           </button>
@@ -132,17 +114,10 @@ const PendingUsersComp: React.FC = () => {
               </table>
             </div>
           </div>
-          {approveModal && (
-            <ApproveModal
-              name="User"
-              setModal={setApproveModal}
-              id={currentId}
-            />
-          )}
-          {disableModal && (
-            <DisableModal
-              name="User"
-              setModal={setDisableModal}
+          {deleteModal && (
+            <DeleteModal
+              name="Community Leader"
+              setModal={setDeleteModal}
               id={currentId}
             />
           )}
@@ -152,4 +127,4 @@ const PendingUsersComp: React.FC = () => {
   );
 };
 
-export default PendingUsersComp;
+export default CommunityLeaderComp;

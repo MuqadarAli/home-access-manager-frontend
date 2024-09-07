@@ -30,6 +30,8 @@ import { lostItemApi } from './rtk-query/lostItem';
 import { alertApi } from './rtk-query/alert';
 import { featuredApi } from './rtk-query/featured';
 import { meetingApi } from './rtk-query/meeting';
+import { communityLeaderApi } from './rtk-query/communityLeader';
+import { chartDataApi } from './rtk-query/chartData';
 
 export const resetStoreAction = createAction('RESET_STORE');
 const persistConfig = {
@@ -67,6 +69,8 @@ export const store = configureStore({
     [alertApi.reducerPath]: alertApi.reducer,
     [featuredApi.reducerPath]: featuredApi.reducer,
     [meetingApi.reducerPath]: meetingApi.reducer,
+    [communityLeaderApi.reducerPath]: communityLeaderApi.reducer,
+    [chartDataApi.reducerPath]: chartDataApi.reducer,
     persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -88,6 +92,8 @@ export const store = configureStore({
       alertApi.middleware,
       featuredApi.middleware,
       meetingApi.middleware,
+      communityLeaderApi.middleware,
+      chartDataApi.middleware,
     ),
 });
 
