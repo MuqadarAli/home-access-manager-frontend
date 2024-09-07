@@ -64,7 +64,7 @@ const AdminProfile = () => {
       if (response?.statusCode == 200) {
         setAddSuccess(response?.message);
         console.log('response', response);
-        
+
         dispatch(updateProfile(response?.value));
         setShowSuccessMessage(true);
       } else {
@@ -140,7 +140,7 @@ const AdminProfile = () => {
                           {...register('full_name', {
                             required: 'This field is required',
                             maxLength: {
-                              value: 20,
+                              value: 100,
                               message:
                                 'The full name of the admin must be no longer than 100 characters.',
                             },
@@ -169,8 +169,7 @@ const AdminProfile = () => {
                         {...register('phone', {
                           required: 'This field is required',
                           pattern: {
-                            value:
-                              /^\+?(\d{1,3})?[-]?(\(\d{3}\))?[-]?(\d{3})[-]?(\d{4})$/,
+                            value: /^.{1,40}$/,
                             message: 'Invalid phone number formate',
                           },
                         })}
@@ -249,7 +248,7 @@ const AdminProfile = () => {
                         {...register('name', {
                           required: 'This field is required',
                           pattern: {
-                            value: /^(?! )[a-zA-Z\s]{1,40}(?<! )$/,
+                            value: /^.{1,40}$/,
                             message:
                               'The name must be no longer than 40 characters.',
                           },

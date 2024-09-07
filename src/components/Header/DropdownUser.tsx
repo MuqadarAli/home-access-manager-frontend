@@ -19,7 +19,7 @@ const DropdownUser = () => {
   const logoutHandler = () => {
     persister.purge();
     dispatch(logout());
-    profile?.community ? navigate('/') : navigate('/login');
+    profile?.role === 'admin' ? navigate('/') : navigate('/login');
   };
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
