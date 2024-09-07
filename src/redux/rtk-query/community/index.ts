@@ -25,7 +25,7 @@ export const communityApi = createApi({
 
     communityRegistration: builder.mutation({
       query: (body) => ({
-        url: 'register-community',
+        url: '/register-community/super-admin',
         method: 'POST',
         body: body,
       }),

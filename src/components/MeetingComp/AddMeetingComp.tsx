@@ -94,7 +94,7 @@ const AddMeetingComp: React.FC = () => {
                       {...register('title', {
                         required: 'This field is required',
                         pattern: {
-                          value: /^[^\s](?!.*\s$)[\s\S]{0,98}[^\s]$/,
+                          value: /^.{1,100}$/,
                           message:
                             'The title must be between 1-100 characters.',
                         },
@@ -120,7 +120,7 @@ const AddMeetingComp: React.FC = () => {
                       {...register('platform', {
                         required: 'This field is required',
                         pattern: {
-                          value: /^(?! )[^\s](.{1,40}[^\s])?$/,
+                          value: /^.{1,40}$/,
                           message:
                             'The platform must be between 1-40 characters.',
                         },
@@ -150,7 +150,7 @@ const AddMeetingComp: React.FC = () => {
                       {...register('link', {
                         required: 'This field is required',
                         pattern: {
-                          value: /^(?! )[^\s](.{0,998}[^\s])?$/,
+                          value: /^.{1,100}$/,
                           message:
                             'The link must be no longer than 1000 characters.',
                         },

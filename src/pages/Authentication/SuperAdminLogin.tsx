@@ -53,7 +53,7 @@ const SuperAdminLogin: React.FC = () => {
   );
 
   if (isAuthenticated) {
-    if (profile?.community) {
+    if (profile?.role === 'admin') {
       return <Navigate to="/dashboard" replace />;
     } else {
       return <Navigate to="/super-admin/dashboard" replace />;

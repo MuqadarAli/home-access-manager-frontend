@@ -43,7 +43,7 @@ export const IsAuth = ({ children }: IsAuthProps) => {
           navigate('/', { replace: true });
         }
       } catch (error) {
-        profile?.community ? navigate('/') : navigate('/login');
+        profile?.role === 'admin' ? navigate('/') : navigate('/login');
         persister.purge();
         dispatch(logout());
         console.log(
@@ -64,12 +64,13 @@ export const IsAuth = ({ children }: IsAuthProps) => {
         if (location?.pathname?.startsWith('/super-admin')) {
           navigate('/dashboard', { replace: true });
         }
-      } else {
-        // Super-admin trying to access a non-super-admin route
-        if (!location?.pathname?.startsWith('/super-admin')) {
-          navigate('/super-admin/dashboard', { replace: true });
-        }
       }
+      //  else {
+      //   // Super-admin trying to access a non-super-admin route
+      //   if (!location?.pathname?.startsWith('/super-admin')) {
+      //     navigate('/super-admin/dashboard', { replace: true });
+      //   }
+      // }
     }
   }, [isAuthenticated]);
 

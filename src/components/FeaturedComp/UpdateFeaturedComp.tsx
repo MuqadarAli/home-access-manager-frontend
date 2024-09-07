@@ -149,7 +149,7 @@ const UpdateFeaturedComp: React.FC = () => {
                     {...register('title', {
                       required: 'This field is required',
                       pattern: {
-                        value: /^(?! )[a-zA-Z\s]{1,40}(?<! )$/,
+                        value: /^.{1,40}$/,
                         message:
                           'The name must be no longer than 40 characters.',
                       },
