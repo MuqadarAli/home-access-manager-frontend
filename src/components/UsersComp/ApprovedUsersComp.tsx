@@ -1,47 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate } from 'react-router-dom';
-import { useGetApprovedUsersForCommunityQuery } from '../../redux/rtk-query/user';
+import {
+  useGetApprovedUsersForCommunityQuery,
+  useUserDisableByAdminMutation,
+} from '../../redux/rtk-query/user';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import Loader from '../Loader';
-import { DisableModal } from '../Modal/DisableModal';
+// import { DisableModal } from '../Modal/DisableModal';
 
 const ApprovedUsersComp: React.FC = () => {
   const profile = useSelector(
     (state: RootState) => state.persistedReducer.auth.profile,
   );
-  const community_id = profile?.community?.id;
-  const [disableModal, setDisableModal] = useState<boolean>(false);
-  const [currentId, setCurrentId] = useState<string>('');
+  const communityId = useSelector(
+    (state: RootState) => state.persistedReducer.auth.community_id,
+  );
+  const community_id = profile?.community?.id || communityId;
+  // const [disableModal, setDisableModal] = useState<boolean>(false);
+  // const [currentId, setCurrentId] = useState<string>('');
+  const [toggleStates, setToggleStates] = useState<{ [key: string]: boolean }>(
+    {},
+  );
 
   const {
     data: users,
     isError,
     isLoading,
   } = useGetApprovedUsersForCommunityQuery(community_id);
+  const [disableUser, { isError: userError }] = useUserDisableByAdminMutation();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (users) {
+      const newToggleStates = users?.value?.reduce(
+        (acc: any, user: any) => ({
+          ...acc,
+          [user?.id]: user?.account_status || false, // Adjust based on your data structure
+        }),
+        {},
+      );
+      setToggleStates(newToggleStates);
+    }
+  }, [users]);
+
+  const handleToggle = async (userId: string) => {
+    const prevState = toggleStates[userId];
+    setToggleStates((prev) => ({
+      ...prev,
+      [userId]: !prevState,
+    }));
+
+    try {
+      await disableUser({ id: userId }); // API call to disable the user
+      // Refetch or handle success response
+    } catch (error) {
+      setToggleStates((prev) => ({
+        ...prev,
+        [userId]: prevState,
+      }));
+    }
+  };
+
   const viewHandler = (user: any) => {
     navigate('/users/user-detail', { state: { user } });
   };
 
-  function disableHandler(id: any) {
-    setDisableModal(!disableModal);
-    setCurrentId(id);
-  }
+  // function disableHandler(id: any) {
+  //   setDisableModal(!disableModal);
+  //   setCurrentId(id);
+  // }
+
   return (
     <>
       <Breadcrumb pageName="Approved Users" />
       <div>{isLoading && <Loader />}</div>
       <div>
-        {isError && (
-          <p className="text-lg leading-6 font-medium text-red-500">
-            System Failed
-          </p>
-        )}
+        {isError ||
+          (userError && (
+            <p className="text-lg leading-6 font-medium text-red-500">
+              System Failed
+            </p>
+          ))}
       </div>
       {!isLoading && (
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -92,21 +135,32 @@ const ApprovedUsersComp: React.FC = () => {
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
-                          {/* <button
-                          className="hover:text-primary bg-green-400 hover:bg-slate-100 rounded-full p-1"
-                          id="mark-button"
-                        >
-                          <IoMdCheckmark size={20} className='text-white'/>
-                        </button> */}
-                          <button
-                            className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
-                            id="cross-button"
-                            onClick={() => {
-                              disableHandler(user?.id);
-                            }}
-                          >
-                            <RxCross2 size={20} className="text-white" />
-                          </button>
+                          <div>
+                            <label
+                              htmlFor={`toggle-${key}`}
+                              className="flex cursor-pointer select-none items-center"
+                            >
+                              <div className="relative">
+                                <input
+                                  type="checkbox"
+                                  id={`toggle-${key}`}
+                                  className="sr-only"
+                                  checked={toggleStates[user?.id]}
+                                  onChange={() => handleToggle(user?.id)}
+                                />
+                                <div className="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]"></div>
+                                <div
+                                  className={`dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
+                                    toggleStates[user?.id]
+                                      ? '!right-1 !translate-x-full !bg-primary dark:!bg-white'
+                                      : ''
+                                  }`}
+                                >
+                                  {/* Placeholder for toggle icons */}
+                                </div>
+                              </div>
+                            </label>
+                          </div>
                           <button
                             className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
                             id="view-button"
@@ -122,13 +176,13 @@ const ApprovedUsersComp: React.FC = () => {
               </table>
             </div>
           </div>
-          {disableModal && (
+          {/* {disableModal && (
             <DisableModal
               name="User"
               setModal={setDisableModal}
               id={currentId}
             />
-          )}
+          )} */}
         </div>
       )}
     </>

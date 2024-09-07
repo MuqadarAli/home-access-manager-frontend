@@ -1,22 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
-// import { IoMdCheckmark } from 'react-icons/io';
-import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
 import { useNavigate } from 'react-router-dom';
-import { useGetApprovedCommunityQuery } from '../../redux/rtk-query/community';
+import {
+  useCommunityDisableMutation,
+  useGetApprovedCommunityQuery,
+} from '../../redux/rtk-query/community';
 import Loader from '../../components/Loader';
-import { DisableModal } from '../../components/Modal/DisableModal';
+import { useDispatch } from 'react-redux';
+import { setCommunityId } from '../../redux/slice/auth';
+// import { DisableModal } from '../../components/Modal/DisableModal';
 
 const ApprovedCommunities: React.FC = () => {
-  const [disableModal, setDisableModal] = useState<boolean>(false);
-  const [currentId, setCurrentId] = useState<string>('');
+  // const [disableModal, setDisableModal] = useState<boolean>(false);
+  // const [currentId, setCurrentId] = useState<string>('');
+  const [toggleStates, setToggleStates] = useState<{ [key: string]: boolean }>(
+    {},
+  );
+  const dispatch = useDispatch();
+  const [disableCommunity, { isError: communityError }] =
+    useCommunityDisableMutation();
+
   const navigate = useNavigate();
   const {
     data: communities,
-    isError,
     isLoading,
+    isError,
+    refetch,
   } = useGetApprovedCommunityQuery(undefined);
+
+  useEffect(() => {
+    // Set initial toggle states based on the communities fetched
+    if (communities) {
+      const newToggleStates = communities?.value?.reduce(
+        (acc: any, community: any) => ({
+          ...acc,
+          [community.id]: !community?.isDisable,
+        }),
+        {},
+      );
+      setToggleStates(newToggleStates);
+    }
+  }, [communities]);
 
   const viewHandler = (community: any) => {
     navigate('/super-admin/communities/community-detail', {
@@ -24,16 +49,41 @@ const ApprovedCommunities: React.FC = () => {
     });
   };
 
-  function disableHandler(id: any) {
-    setDisableModal(!disableModal);
-    setCurrentId(id);
-  }
+  const navigateToAdminDashboardHandler = (community_id: string) => {
+    dispatch(setCommunityId(community_id));
+    navigate('/dashboard');
+  };
+
+  // const disableHandler = (id: any) => {
+  //   setDisableModal(!disableModal);
+  //   setCurrentId(id);
+  // };
+
+  const handleToggle = async (community_id: string) => {
+    const prevState = toggleStates[community_id];
+    setToggleStates((prevStates) => ({
+      ...prevStates,
+      [community_id]: !prevState,
+    }));
+
+    const res = await disableCommunity({ id: community_id });
+    if (res.error) {
+      // Handle failure: revert toggle state
+      setToggleStates((prevStates) => ({
+        ...prevStates,
+        [community_id]: prevState,
+      }));
+    } else {
+      refetch(); // Optional: refetch data to keep UI in sync with server
+    }
+  };
+
   return (
     <>
       <Breadcrumb pageName="Approved Communities" />
       <div>{isLoading && <Loader />}</div>
       <div>
-        {isError && (
+        {(isError || communityError) && (
           <p className="text-lg leading-6 font-medium text-red-500">
             System Failed
           </p>
@@ -49,7 +99,7 @@ const ApprovedCommunities: React.FC = () => {
                     <th className="min-w-[220px]  py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                       Name
                     </th>
-                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
+                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                       Community Type
                     </th>
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
@@ -66,8 +116,13 @@ const ApprovedCommunities: React.FC = () => {
                 <tbody>
                   {communities?.value?.map((community: any, key: number) => (
                     <tr key={key}>
-                      <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                        <p className="font-medium text-black dark:text-white">
+                      <td
+                        className="border-b border-[#eee] cursor-pointer hover:bg-slate-50 py-5 px-4 pl-9 dark:border-strokedark xl:pl-11"
+                        onClick={() =>
+                          navigateToAdminDashboardHandler(community?.id)
+                        }
+                      >
+                        <p className="font-medium hover:text-primary text-black dark:text-white">
                           {community?.name}
                         </p>
                       </td>
@@ -88,15 +143,37 @@ const ApprovedCommunities: React.FC = () => {
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
-                          <button
-                            className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
-                            id="cross-button"
-                            onClick={() => {
-                              disableHandler(community?.id);
-                            }}
-                          >
-                            <RxCross2 size={20} className="text-white" />
-                          </button>
+                          <div>
+                            <label
+                              htmlFor={`toggle-${key}`}
+                              className="flex cursor-pointer select-none items-center"
+                            >
+                              <div className="relative">
+                                <input
+                                  type="checkbox"
+                                  id={`toggle-${key}`}
+                                  className="sr-only"
+                                  checked={
+                                    toggleStates[community?.id] !== undefined
+                                      ? toggleStates[community?.id]
+                                      : !community?.isDisable
+                                  }
+                                  onChange={() => handleToggle(community?.id)}
+                                />
+                                <div className="block h-8 w-14 rounded-full bg-meta-9 dark:bg-[#5A616B]"></div>
+                                <div
+                                  className={`dot absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
+                                    (toggleStates[community?.id] !== undefined
+                                      ? toggleStates[community?.id]
+                                      : !community?.isDisable) &&
+                                    '!right-1 !translate-x-full !bg-primary dark:!bg-white'
+                                  }`}
+                                >
+                                  {/* icons for toggle */}
+                                </div>
+                              </div>
+                            </label>
+                          </div>
                           <button
                             className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
                             id="view-button"
@@ -112,13 +189,13 @@ const ApprovedCommunities: React.FC = () => {
               </table>
             </div>
           </div>
-          {disableModal && (
+          {/* {disableModal && (
             <DisableModal
               name="Community"
               setModal={setDisableModal}
               id={currentId}
             />
-          )}
+          )} */}
         </div>
       )}
     </>

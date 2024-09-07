@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const baseUrl = import.meta.env.VITE_ENV === 'development'
-  ? import.meta.env.VITE_DEV_URL
-  : import.meta.env.VITE_PRO_URL;
-// const baseUrl = 'https://api.homeaccessmanager.com';
+// const baseUrl = import.meta.env.VITE_ENV === 'development'
+//   ? import.meta.env.VITE_DEV_URL
+//   : import.meta.env.VITE_PRO_URL;
+const baseUrl = 'https://api.homeaccessmanager.com';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({

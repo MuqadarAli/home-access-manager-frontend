@@ -57,6 +57,9 @@ import { AddMeeting } from './pages/Meeting/AddMeeting';
 import { PageNotFound } from './pages/PageNotFound';
 import { UpdateFeatured } from './pages/Featured/UpdateFeatured';
 import { LostItemDetail } from './pages/CommunityAlert/LostItemDetail';
+import { CommunityLeader } from './pages/CommunityLeader';
+import { AddCommunityLeader } from './pages/CommunityLeader/AddcommunityLeader';
+import { CommunityLeaderDetail } from './pages/CommunityLeader/CommunityLeaderDetail';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -440,6 +443,33 @@ function App() {
         element={
           <IsAuth>
             <AddMeeting />
+          </IsAuth>
+        }
+      />
+
+      {/* //------------------------Community Leader----------------// */}
+      <Route
+        path="/community-leader"
+        element={
+          <IsAuth>
+            <CommunityLeader />
+          </IsAuth>
+        }
+      />
+
+      <Route
+        path="/add-community-leader"
+        element={
+          <IsAuth>
+            <AddCommunityLeader />
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/community-leader/detail"
+        element={
+          <IsAuth>
+            <CommunityLeaderDetail />
           </IsAuth>
         }
       />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import { RxCross2 } from 'react-icons/rx';
 import { SlEye } from 'react-icons/sl';
@@ -10,12 +10,15 @@ import Loader from '../Loader';
 import { DisableModal } from '../Modal/DisableModal';
 
 const ApprovedVisitorsComp: React.FC = () => {
-  const profile = useSelector(
-    (state: RootState) => state.persistedReducer.auth.profile,
+  const profile = useSelector((state: RootState) => state.persistedReducer.auth.profile);
+  const communityId = useSelector(
+    (state: RootState) => state.persistedReducer.auth.community_id,
   );
-  const community_id = profile?.community?.id;
+  
+  const community_id = profile?.community?.id || communityId;
   const [disableModal, setDisableModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
+  const [filterDate, setFilterDate] = useState<string>('');
 
   const {
     data: visitors,
@@ -24,6 +27,7 @@ const ApprovedVisitorsComp: React.FC = () => {
   } = useGetApprovedVisitorForCommunityQuery(community_id);
 
   const navigate = useNavigate();
+
   const viewHandler = (visitor: any) => {
     navigate('/visitors-airbnb/visitor-detail', { state: { visitor } });
   };
@@ -32,6 +36,14 @@ const ApprovedVisitorsComp: React.FC = () => {
     setDisableModal(!disableModal);
     setCurrentId(id);
   }
+
+  // Filter visitors based on the input date
+  const filteredVisitors = useMemo(() => {
+    return visitors?.value?.filter((visitor: any) =>
+      visitor.date_of_visit.includes(filterDate)
+    );
+  }, [visitors, filterDate]);
+
   return (
     <>
       <Breadcrumb pageName="Approved Visitors" />
@@ -43,6 +55,13 @@ const ApprovedVisitorsComp: React.FC = () => {
           </p>
         )}
       </div>
+      <input
+        type="date"
+        value={filterDate}
+        onChange={e => setFilterDate(e.target.value)}
+        className="mb-4 p-2 border rounded"
+        placeholder="Filter by Date of Visit"
+      />
       {!isLoading && (
         <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -68,10 +87,10 @@ const ApprovedVisitorsComp: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {visitors?.value?.map((visitor: any, key: number) => (
+                  {filteredVisitors?.map((visitor: any, key: number) => (
                     <tr key={key}>
                       <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-                        <p className=" text-black dark:text-white">
+                        <p className="text-black dark:text-white">
                           {visitor.first_name}
                         </p>
                       </td>
@@ -92,12 +111,6 @@ const ApprovedVisitorsComp: React.FC = () => {
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
-                          {/* <button
-                          className="hover:text-primary bg-green-400 hover:bg-slate-100 rounded-full p-1"
-                          id="mark-button"
-                        >
-                          <IoMdCheckmark size={20} className='text-white'/>
-                        </button> */}
                           <button
                             className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
                             id="cross-button"

@@ -15,7 +15,11 @@ const ApprovedVehiclesComp: React.FC = () => {
   const profile = useSelector(
     (state: RootState) => state.persistedReducer.auth.profile,
   );
-  const community_id = profile?.community?.id;
+  const communityId = useSelector(
+    (state: RootState) => state.persistedReducer.auth.community_id,
+  );
+  
+  const community_id = profile?.community?.id || communityId;
   const {
     data: vehicles,
     isError,
@@ -59,7 +63,7 @@ const ApprovedVehiclesComp: React.FC = () => {
                       Make Of Vehicle
                     </th>
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                      User Name
+                      Owner Name
                     </th>
                     <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Actions

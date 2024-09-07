@@ -8,6 +8,7 @@ import { useDeleteLostItemMutation } from '../../redux/rtk-query/lostItem';
 import { useDeleteAlertMutation } from '../../redux/rtk-query/alert';
 import { useDeleteFeaturedMutation } from '../../redux/rtk-query/featured';
 import { useDeleteMeetingMutation } from '../../redux/rtk-query/meeting';
+import { useDeleteCommunityLeaderMutation } from '../../redux/rtk-query/communityLeader';
 
 type DeleteModalType = {
   id: string;
@@ -36,6 +37,14 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
       isSuccess: featuredSuccess,
     },
   ] = useDeleteFeaturedMutation();
+  const [
+    deleteCommunityLeader,
+    {
+      isError: communityLeaderError,
+      isLoading: communityLeaderLoading,
+      isSuccess: communityLeaderSuccess,
+    },
+  ] = useDeleteCommunityLeaderMutation();
   const [
     deleteMeeting,
     {
@@ -83,6 +92,13 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
           break;
         case 'Meeting':
           await deleteMeeting({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Community Leader':
+          await deleteCommunityLeader({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -147,7 +163,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                       lostLoading ||
                       alertLoading ||
                       featuredLoading ||
-                      meetingLoading
+                      meetingLoading ||
+                      communityLeaderLoading
                     }
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
@@ -155,7 +172,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                     !lostLoading ||
                     !alertLoading ||
                     !featuredLoading ||
-                    !meetingLoading ? (
+                    !meetingLoading ||
+                    !communityLeaderLoading ? (
                       'Delete'
                     ) : (
                       <Loader />
@@ -166,7 +184,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                   lostSuccess ||
                   alertSuccess ||
                   featuredSuccess ||
-                  meetingSuccess) && (
+                  meetingSuccess ||
+                  communityLeaderSuccess) && (
                   <div id="delete-alert" className="mt-3">
                     <SuccessAlert name={name} action="Delete" />
                   </div>
@@ -175,7 +194,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                   lostError ||
                   alertError ||
                   featuredError ||
-                  meetingError) && (
+                  meetingError ||
+                  communityLeaderError) && (
                   <div id="error-delete-alert" className="mt-3">
                     <ErrorAlert />
                   </div>
