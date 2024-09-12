@@ -3,16 +3,18 @@ import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 import { RxCross2 } from 'react-icons/rx';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { useGetApprovedAirbnbForCommunityQuery } from '../../redux/rtk-query/airbnb';
 import Loader from '../Loader';
 import { DisableModal } from '../Modal/DisableModal';
+import { useGetApprovedVisitorForCommunityQuery } from '../../redux/rtk-query/visitor';
 
 const ApprovedAirbnbComp: React.FC = () => {
-  const profile = useSelector((state: RootState) => state.persistedReducer.auth.profile);
+  const profile = useSelector(
+    (state: RootState) => state.persistedReducer.auth.profile,
+  );
   const communityId = useSelector(
     (state: RootState) => state.persistedReducer.auth.community_id,
   );
-  
+
   const community_id = profile?.community?.id || communityId;
   const [disableModal, setDisableModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
@@ -22,7 +24,10 @@ const ApprovedAirbnbComp: React.FC = () => {
     data: airbnbList,
     isError,
     isLoading,
-  } = useGetApprovedAirbnbForCommunityQuery(community_id);
+  } = useGetApprovedVisitorForCommunityQuery({
+    community_id,
+    visitor_type: 'airbnb',
+  });
 
   function disableHandler(id: any) {
     setDisableModal(!disableModal);
@@ -42,7 +47,7 @@ const ApprovedAirbnbComp: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb pageName="Approved Airbnb" />
+      <Breadcrumb pageName="Airbnb" />
       <div>{isLoading && <Loader />}</div>
       <div>
         {isError && (
@@ -54,7 +59,7 @@ const ApprovedAirbnbComp: React.FC = () => {
       <input
         type="date"
         value={filterDate}
-        onChange={e => setFilterDate(e.target.value)}
+        onChange={(e) => setFilterDate(e.target.value)}
         className="mb-4 p-2 border rounded"
         placeholder="Filter by Date"
       />
@@ -124,7 +129,7 @@ const ApprovedAirbnbComp: React.FC = () => {
           </div>
           {disableModal && (
             <DisableModal
-              name="Airbnb"
+              name="Visitor"
               setModal={setDisableModal}
               id={currentId}
             />

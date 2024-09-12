@@ -24,10 +24,8 @@ import AdminDashboard from './pages/Dashboard/AdminDashboard';
 import { PendingUsers } from './pages/Users/PendingUsers';
 import { UserDetail } from './pages/Users/UserDetail';
 import { ApprovedUsers } from './pages/Users/ApprovedUsers';
-import { PendingVisitors } from './pages/VisitorsAirbnb/VisitorsPending';
 import { VisitorDetail } from './pages/VisitorsAirbnb/VisitorDetail';
 import { ApprovedVisitors } from './pages/VisitorsAirbnb/ApprovedVisitor';
-import { PendingAirbnb } from './pages/VisitorsAirbnb/PendingAirbnb';
 import { ApprovedAirbnb } from './pages/VisitorsAirbnb/ApprovedAirbnb';
 import { IsAuth } from './components/IsAuth';
 import { SuperAdminChangePass } from './pages/ChangePassword';
@@ -60,6 +58,7 @@ import { LostItemDetail } from './pages/CommunityAlert/LostItemDetail';
 import { CommunityLeader } from './pages/CommunityLeader';
 import { AddCommunityLeader } from './pages/CommunityLeader/AddcommunityLeader';
 import { CommunityLeaderDetail } from './pages/CommunityLeader/CommunityLeaderDetail';
+import { ApprovedWorker } from './pages/VisitorsAirbnb/ApprovedWorker';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -200,16 +199,10 @@ function App() {
           </IsAuth>
         }
       />
+      {/* //--------------------------------------------Visitors, Airbnb and Workers-----------------------------------------// */}
+
       <Route
-        path="/visitors-airbnb/pending-visitors"
-        element={
-          <IsAuth>
-            <PendingVisitors />
-          </IsAuth>
-        }
-      />
-      <Route
-        path="/visitors-airbnb/visitor-detail"
+        path="/visitors/visitor-detail"
         element={
           <IsAuth>
             <VisitorDetail />
@@ -217,7 +210,7 @@ function App() {
         }
       />
       <Route
-        path="/visitors-airbnb/approved-visitors"
+        path="/visitors/visitors"
         element={
           <IsAuth>
             <ApprovedVisitors />
@@ -225,18 +218,18 @@ function App() {
         }
       />
       <Route
-        path="/visitors-airbnb/pending-airbnb"
+        path="/visitors/airbnb"
         element={
           <IsAuth>
-            <PendingAirbnb />
+            <ApprovedAirbnb />
           </IsAuth>
         }
       />
       <Route
-        path="/visitors-airbnb/approved-airbnb"
+        path="/visitors/workers"
         element={
           <IsAuth>
-            <ApprovedAirbnb />
+            <ApprovedWorker />
           </IsAuth>
         }
       />

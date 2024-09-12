@@ -24,12 +24,12 @@ const ApprovedVisitorsComp: React.FC = () => {
     data: visitors,
     isError,
     isLoading,
-  } = useGetApprovedVisitorForCommunityQuery(community_id);
+  } = useGetApprovedVisitorForCommunityQuery({community_id, visitor_type: 'visitor'});
 
   const navigate = useNavigate();
 
   const viewHandler = (visitor: any) => {
-    navigate('/visitors-airbnb/visitor-detail', { state: { visitor } });
+    navigate('/visitors/visitor-detail', { state: { visitor } });
   };
 
   function disableHandler(id: any) {
@@ -46,7 +46,7 @@ const ApprovedVisitorsComp: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb pageName="Approved Visitors" />
+      <Breadcrumb pageName="Visitors" />
       <div>{isLoading && <Loader />}</div>
       <div>
         {isError && (

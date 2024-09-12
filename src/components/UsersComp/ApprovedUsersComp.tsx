@@ -103,7 +103,7 @@ const ApprovedUsersComp: React.FC = () => {
                       Email
                     </th>
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                      Phone Number
+                      User Type
                     </th>
                     <th className="py-4 px-4 font-medium text-black dark:text-white">
                       Actions
@@ -130,7 +130,7 @@ const ApprovedUsersComp: React.FC = () => {
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="text-black dark:text-white">
-                          {user?.primary_phone}
+                          {user?.user_type}
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
