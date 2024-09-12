@@ -6,7 +6,7 @@ import ApprovedVisitorsComp from '../../components/VisitorAirbnbComp/ApprovedVis
 export const ApprovedVisitors: React.FC = () => {
   return (
     <AdminLayout>
-      <PageTitle title="Approved Visitors | Home Access Manager" />
+      <PageTitle title="Visitors | Home Access Manager" />
       <ApprovedVisitorsComp />
     </AdminLayout>
   );

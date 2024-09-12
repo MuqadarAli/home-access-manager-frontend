@@ -41,8 +41,8 @@ export const visitorApi = createApi({
     }),
 
     getApprovedVisitorForCommunity: builder.query({
-      query: (community_id) => ({
-        url: `approved/${community_id}`,
+      query: ({community_id, visitor_type}) => ({
+        url: `approved/${community_id}/${visitor_type}`,
         method: 'GET',
       }),
       providesTags: ['visitor'],

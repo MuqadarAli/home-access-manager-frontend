@@ -8,8 +8,8 @@ import { HiOutlineUsers } from 'react-icons/hi';
 import { MdOutlineProductionQuantityLimits } from 'react-icons/md';
 import { MdOutlineBusiness } from 'react-icons/md';
 import { AiOutlineAlert } from 'react-icons/ai';
-import { MdOutlinePayments } from "react-icons/md";
-import { MdOutlinePersonalInjury } from "react-icons/md";
+import { MdOutlinePayments } from 'react-icons/md';
+import { MdOutlinePersonalInjury } from 'react-icons/md';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -388,8 +388,8 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Visitors/Airbnb --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/visitors-airbnb' ||
-                  pathname.includes('visitors-airbnb')
+                  pathname === '/visitors' ||
+                  pathname.includes('visitors')
                 }
               >
                 {(handleClick, open) => {
@@ -398,8 +398,8 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/visitors-airbnb' ||
-                            pathname.includes('visitors-airbnb')) &&
+                          (pathname === '/visitors' ||
+                            pathname.includes('visitors')) &&
                           'bg-graydark dark:bg-meta-4'
                         }`}
                         onClick={(e) => {
@@ -410,7 +410,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         }}
                       >
                         <GrGroup size={20} />
-                        Visitors/Airbnb
+                        Visitors
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
                             open && 'rotate-180'
@@ -438,46 +438,35 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/visitors-airbnb/pending-visitors"
+                              to="/visitors/visitors"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Pending Visitors
+                              Visitors
                             </NavLink>
                           </li>
                           <li>
                             <NavLink
-                              to="/visitors-airbnb/approved-visitors"
+                              to="/visitors/airbnb"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Approved Visitors
+                              Airbnb
                             </NavLink>
                           </li>
                           <li>
                             <NavLink
-                              to="/visitors-airbnb/pending-airbnb"
+                              to="/visitors/workers"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Pending Airbnb
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/visitors-airbnb/approved-airbnb"
-                              className={({ isActive }) =>
-                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                (isActive && '!text-white')
-                              }
-                            >
-                              Approved Airbnb
+                              Workers
                             </NavLink>
                           </li>
                         </ul>
@@ -884,10 +873,11 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 }}
               </SidebarLinkGroup>
 
-               {/* <!-- Community Leader--> */}
-               <SidebarLinkGroup
+              {/* <!-- Community Leader--> */}
+              <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/community-leader' || pathname.includes('community-leader')
+                  pathname === '/community-leader' ||
+                  pathname.includes('community-leader')
                 }
               >
                 {(handleClick, open) => {
@@ -907,7 +897,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             : setSidebarExpanded(true);
                         }}
                       >
-                        <MdOutlinePersonalInjury size={20}/>
+                        <MdOutlinePersonalInjury size={20} />
                         Community Leader
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
@@ -942,7 +932,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && '!text-white')
                               }
                             >
-                              Community Leader 
+                              Community Leader
                             </NavLink>
                           </li>
                           <li>

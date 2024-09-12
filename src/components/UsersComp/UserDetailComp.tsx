@@ -40,18 +40,27 @@ const UserDetailComp: React.FC = () => {
             </div>
             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
-                Phone Number
+                User Type
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                {user?.primary_phone}
+                {user?.user_type}
               </dd>
             </div>
-            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
+
+            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
               <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
                 Address
               </dt>
               <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
                 {user?.address}
+              </dd>
+            </div>
+            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+              <dt className="text-lg font-semibold leading-7  text-black dark:text-white">
+                Phone Number
+              </dt>
+              <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
+                {user?.primary_phone}
               </dd>
             </div>
 
@@ -94,17 +103,17 @@ const UserDetailComp: React.FC = () => {
         <div className="col-span-5 xl:col-span-2">
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-              <h3 className="font-medium text-black dark:text-white">
-                Image
-              </h3>
+              <h3 className="font-medium text-black dark:text-white">Image</h3>
             </div>
-            {user?.image_url && <div className="p-7">
-              <img
-                alt="user-image"
-                src={user?.image_url}
-                className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
-              ></img>
-            </div>}
+            {user?.image_url && (
+              <div className="p-7">
+                <img
+                  alt="user-image"
+                  src={user?.image_url}
+                  className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5"
+                ></img>
+              </div>
+            )}
           </div>
         </div>
       </div>
