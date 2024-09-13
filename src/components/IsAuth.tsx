@@ -11,7 +11,6 @@ interface IsAuthProps {
 }
 
 export const IsAuth = ({ children }: IsAuthProps) => {
-  console.log('Auth');
 
   const token = useSelector(
     (state: RootState) => state.persistedReducer.auth.token,
@@ -26,7 +25,6 @@ export const IsAuth = ({ children }: IsAuthProps) => {
   const profile = useSelector(
     (state: RootState) => state?.persistedReducer?.auth?.profile,
   );
-  console.log('role',profile?.role);
 
   useEffect(() => {
     const verifyToken = async () => {

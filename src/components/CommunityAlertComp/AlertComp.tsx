@@ -116,7 +116,7 @@ const AlertComp: React.FC = () => {
             <form
               method="post"
               onSubmit={handleSubmit(onSubmit)}
-              className="xl:w-1/2 w-full"
+              className="xl:w-1/2 w-full pb-5"
             >
               <input
                 type="hidden"
@@ -210,12 +210,14 @@ const AlertComp: React.FC = () => {
                 )}
               </div>
               {
-                <button
-                  type="submit"
-                  className="flex w-full mt-3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
-                >
-                  {!emergencyLoading ? 'Add' : <Loader />}
-                </button>
+                <div className='w-fill flex justify-end mb-3'>
+                  <button
+                    type="submit"
+                    className="flex w-30 sm:w-52 mt-3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
+                  >
+                    {!emergencyLoading ? 'Add' : <Loader />}
+                  </button>
+                </div>
               }
 
               {emergencySuccess && showSuccessMessage && (
