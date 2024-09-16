@@ -59,6 +59,7 @@ import { CommunityLeader } from './pages/CommunityLeader';
 import { AddCommunityLeader } from './pages/CommunityLeader/AddcommunityLeader';
 import { CommunityLeaderDetail } from './pages/CommunityLeader/CommunityLeaderDetail';
 import { ApprovedWorker } from './pages/VisitorsAirbnb/ApprovedWorker';
+import { SecurityGuard } from './pages/SecurityGuard';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -463,6 +464,17 @@ function App() {
         element={
           <IsAuth>
             <CommunityLeaderDetail />
+          </IsAuth>
+        }
+      />
+
+      {/* //--------------------------------------------Security Guard-----------------------------------------// */}
+
+      <Route
+        path="/security-guard"
+        element={
+          <IsAuth>
+            <SecurityGuard />
           </IsAuth>
         }
       />

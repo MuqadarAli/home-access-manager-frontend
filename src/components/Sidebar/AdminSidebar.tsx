@@ -10,6 +10,7 @@ import { MdOutlineBusiness } from 'react-icons/md';
 import { AiOutlineAlert } from 'react-icons/ai';
 import { MdOutlinePayments } from 'react-icons/md';
 import { MdOutlinePersonalInjury } from 'react-icons/md';
+import { MdOutlineSecurity } from 'react-icons/md';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -388,8 +389,7 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Visitors/Airbnb --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/visitors' ||
-                  pathname.includes('visitors')
+                  pathname === '/visitors' || pathname.includes('visitors')
                 }
               >
                 {(handleClick, open) => {
@@ -953,6 +953,27 @@ const AdminSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   );
                 }}
               </SidebarLinkGroup>
+
+              {/* Security Guard */}
+              <React.Fragment>
+                <NavLink
+                  to="/security-guard"
+                  className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    (pathname === '/security-guard' ||
+                      pathname.includes('security-guard')) &&
+                    'bg-graydark dark:bg-meta-4'
+                  }`}
+                  // onClick={(e) => {
+                  //   e.preventDefault();
+                  //   sidebarExpanded
+                  //     ? handleClick()
+                  //     : setSidebarExpanded(true);
+                  // }}
+                >
+                  <MdOutlineSecurity size={20}/>
+                  Security Guard
+                </NavLink>
+              </React.Fragment>
 
               {/* <!-- Menu Item Profile --> */}
 

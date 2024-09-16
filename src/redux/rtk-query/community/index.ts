@@ -11,7 +11,7 @@ export const communityApi = createApi({
     baseUrl: `${baseUrl}/community/`,
   }),
 
-  tagTypes: ['community','emergency'],
+  tagTypes: ['community', 'emergency', 'security-guard'],
 
   endpoints: (builder) => ({
     communityApproval: builder.mutation({
@@ -90,6 +90,32 @@ export const communityApi = createApi({
       }),
       invalidatesTags: ['emergency'],
     }),
+
+    addSecurityGuard: builder.mutation({
+      query: (body) => ({
+        url: '/security-guard',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ['security-guard'],
+    }),
+
+    deleteSecurityGuard: builder.mutation({
+      query: (body) => ({
+        url: `/security-guard`,
+        method: 'DELETE',
+        body: body,
+      }),
+      invalidatesTags: ['security-guard'],
+    }),
+
+    getSecurityGuard: builder.query({
+      query: (community_id) => ({
+        url: `/security-guard/${community_id}`,
+        method: 'GET',
+      }),
+      providesTags: ['security-guard'],
+    }),
   }),
 });
 
@@ -102,5 +128,8 @@ export const {
   useGetCommunityTypeQuery,
   useUpdateCommunityProfileMutation,
   useGetEmergencyNumbersQuery,
-  useAddEmergencyNumberMutation
+  useAddEmergencyNumberMutation,
+  useAddSecurityGuardMutation,
+  useDeleteSecurityGuardMutation,
+  useGetSecurityGuardQuery
 } = communityApi;
