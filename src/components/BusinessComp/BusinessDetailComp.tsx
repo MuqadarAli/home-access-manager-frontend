@@ -130,7 +130,9 @@ const BusinessDetailComp = () => {
                         Date Of Approval
                       </dt>
                       <dd className="mt-1 text-lg leading-7 font-normal text-black dark:text-white sm:mt-2">
-                        {datetimeFormate(business?.approval_date)}
+                        {business?.approval_date
+                          ? datetimeFormate(business?.approval_date)
+                          : ''}
                       </dd>
                     </div>
                     <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">

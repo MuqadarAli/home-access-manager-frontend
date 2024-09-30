@@ -1,32 +1,16 @@
-import React, { useState } from 'react';
-import Breadcrumb from '../Breadcrumbs/Breadcrumb';
-import { RiDeleteBin6Line } from 'react-icons/ri';
-import Loader from '../Loader';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
+import { FaArrowRight } from 'react-icons/fa6';
+import { SlEye } from 'react-icons/sl';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { DeleteModal } from '../Modal/DeleteModal';
+import Loader from '../Loader';
 import { useForm } from 'react-hook-form';
-import {
-  useAddSecurityGuardMutation,
-  useGetSecurityGuardQuery,
-} from '../../redux/rtk-query/community';
-import SuccessMessage from '../Alert/SuccessMessage';
-import ErrorMessage from '../Alert/ErrorMessage';
-
-type AddType = {
-  community_id: string;
-  email: string;
-  password: string;
-  confirm_password: string;
-};
+import { useState } from 'react';
+import { useGetApprovedUsersByLotNumberQuery } from '../../redux/rtk-query/user';
+// import { DisableModal } from '../Modal/DisableModal';
 
 const SecurityGuardComp: React.FC = () => {
-  const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [currentId, setCurrentId] = useState<string>('');
-  const [addError, setAddError] = useState<string>('');
-  const [addSuccess, setAddSuccess] = useState<string>('');
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
   const profile = useSelector(
     (state: RootState) => state.persistedReducer.auth.profile,
   );
@@ -35,53 +19,53 @@ const SecurityGuardComp: React.FC = () => {
   );
   const community_id = profile?.community?.id || communityId;
 
+  const [lotNumber, setLotNumber] = useState('');
+
   const {
-    data: securityGuard,
+    data: users,
     isError,
     isLoading,
-  } = useGetSecurityGuardQuery(community_id);
+  } = useGetApprovedUsersByLotNumberQuery(
+    { community_id, lot_number: lotNumber },
+    { skip: !lotNumber },
+  );
 
-  const [
-    addSecurityGuard,
-    {
-      isSuccess: securitySuccess,
-      isLoading: securityLoading,
-      isError: securityError,
-    },
-  ] = useAddSecurityGuardMutation();
+  const navigate = useNavigate();
 
-  function deleteHandler(id: any) {
-    setDeleteModal(!deleteModal);
-    setCurrentId(id);
-  }
+  const viewHandler = (user: any, type: string) => {
+    type === 'view'
+      ? navigate('/users/user-detail', { state: { user } })
+      : navigate('/security-guard/visitors-menu', { state: { user_id: user?.id } });
+  };
+
+  // function disableHandler(id: any) {
+  //   setDisableModal(!disableModal);
+  //   setCurrentId(id);
+  // }
 
   const {
     handleSubmit,
-    reset,
     register,
     formState: { errors },
-  } = useForm<AddType>();
+  } = useForm({
+    defaultValues: {
+      lot_number: '',
+    },
+  });
 
   const onSubmit: any = async (data: any) => {
     try {
-      const response = await addSecurityGuard(data).unwrap();
-
-      if (response?.statusCode == 201 || response?.statusCode == 200) {
-        setAddSuccess(response?.message);
-        setShowSuccessMessage(true);
-        reset();
-      } else {
-        setAddError(response?.message);
-        setShowErrorMessage(true);
-      }
+      const { lot_number } = data;
+      setLotNumber(lot_number);
     } catch (error) {
       console.log(error);
     }
   };
+
   return (
     <>
-      <Breadcrumb pageName="Security Guard" />
-      <div>{isLoading && <Loader />}</div>
+      <Breadcrumb pageName="Users" />
+      {/* <div>{isLoading && <Loader />}</div> */}
       <div>
         {isError && (
           <p className="text-lg leading-6 font-medium text-red-500">
@@ -89,153 +73,103 @@ const SecurityGuardComp: React.FC = () => {
           </p>
         )}
       </div>
-      {!isLoading && (
-        <>
-          <div
-            id="alert-input"
-            className="xl:flex  gap-5 rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1"
+      <form
+        method="post"
+        onSubmit={handleSubmit(onSubmit)}
+        className="mb-3 lg:flex gap-5 "
+      >
+        <div className="mb-4">
+          <div className="relative">
+            <input
+              type="text"
+              id="text"
+              {...register('lot_number', {
+                required: 'This field is requires',
+                pattern: {
+                  value: /^[^\s]{1,20}$/,
+                  message: 'Lot number must be between 1-20 characters',
+                },
+              })}
+              placeholder="Enter lot number"
+              className="w-full lg:w-[300px] rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none  focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            />
+          </div>
+          {errors?.lot_number && (
+            <p className="text-red-500">{errors?.lot_number?.message}</p>
+          )}
+        </div>
+
+        <div className="mb-5">
+          <button
+            type="submit"
+            value="Sign In"
+            className="w-full lg:w-[150px] cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
           >
-            <form
-              method="post"
-              onSubmit={handleSubmit(onSubmit)}
-              className="xl:w-1/2 w-full pb-5"
-            >
-              <input
-                type="hidden"
-                value={community_id}
-                {...register(`community_id`)}
-              />
-
-              <div className="mb-4">
-                <label
-                  htmlFor={`email`}
-                  className="mb-2.5 text-base block text-black dark:text-white"
-                >
-                  Email <span className="text-meta-1">*</span>
-                </label>
-                <input
-                  type="text"
-                  id={`email`}
-                  {...register(`email`, {
-                    required: 'This field is required',
-                    pattern: {
-                      value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-                      message: 'Invalid email formate',
-                    },
-                  })}
-                  placeholder={`Enter email`}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                />
-                {errors?.email && (
-                  <p className="text-red-500">{errors?.email?.message}</p>
-                )}
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor={`password`}
-                  className="mb-2.5 text-base block text-black dark:text-white"
-                >
-                  Password <span className="text-meta-1">*</span>
-                </label>
-                <input
-                  type="password"
-                  id={`password`}
-                  {...register(`password`, {
-                    required: 'This field is required',
-                    pattern: {
-                      value: /^[^\s]{8,14}$/,
-                      message: 'Password must be 8-14 characters',
-                    },
-                  })}
-                  placeholder={`Enter password`}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                />
-                {errors?.password && (
-                  <p className="text-red-500">{errors?.password?.message}</p>
-                )}
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor={`confirm_password`}
-                  className="mb-2.5 text-base block text-black dark:text-white"
-                >
-                  Confirm Password <span className="text-meta-1">*</span>
-                </label>
-                <input
-                  type="password"
-                  id={`confirm_password`}
-                  {...register(`confirm_password`, {
-                    required: 'This field is required',
-                    pattern: {
-                      value: /^[^\s]{8,14}$/,
-                      message: 'Confirm password must be 8-14 characters',
-                    },
-                  })}
-                  placeholder={`Enter confirm password`}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                />
-                {errors?.confirm_password && (
-                  <p className="text-red-500">
-                    {errors?.confirm_password?.message}
-                  </p>
-                )}
-              </div>
-
-              {
-                <div className="w-fill flex justify-end mb-3">
-                  <button
-                    type="submit"
-                    className="flex w-30 sm:w-52 mt-3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
-                  >
-                    {!securityLoading ? 'Add' : <Loader />}
-                  </button>
-                </div>
-              }
-
-              {securitySuccess && showSuccessMessage && (
-                <SuccessMessage
-                  message={addSuccess}
-                  setShowMessage={setShowSuccessMessage}
-                />
-              )}
-              {addError && showErrorMessage && (
-                <ErrorMessage
-                  message={addError}
-                  setShowMessage={setShowErrorMessage}
-                />
-              )}
-            </form>
-            <div id="number-list" className="xl:w-1/2 w-full mt-8">
+            {!isLoading ? 'Search' : <Loader />}
+          </button>
+        </div>
+      </form>
+      {!isLoading && (
+        <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+            <div className="max-w-full overflow-x-auto">
               <table className="w-full table-auto mb-5">
                 <thead>
-                  <tr className="bg-gray-2 text-left dark:bg-meta-4 ">
+                  <tr className="bg-gray-2 text-left dark:bg-meta-4">
                     <th className="min-w-[220px]  py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
-                      email
+                      First Name
+                    </th>
+                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white ">
+                      Last Name
                     </th>
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
-                      Action
+                      Email
+                    </th>
+                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                      User Type
+                    </th>
+                    <th className="py-4 px-4 font-medium text-black dark:text-white">
+                      Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {securityGuard?.value?.map((guard: any, key: number) => (
+                  {users?.value?.map((user: any, key: number) => (
                     <tr key={key}>
+                      <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+                        <p className="text-black dark:text-white">
+                          {user?.first_name}
+                        </p>
+                      </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <p className="text-black dark:text-white">
-                          {guard?.email}
+                          {user?.last_name}
+                        </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <p className="text-black dark:text-white">
+                          {user?.email}
+                        </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <p className="text-black dark:text-white">
+                          {user?.user_type}
                         </p>
                       </td>
                       <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
                         <div className="flex items-center space-x-3.5">
                           <button
-                            className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
-                            onClick={() => deleteHandler(guard?.id)}
-                            id="cross-button"
+                            className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
+                            id="view-button"
+                            onClick={() => viewHandler(user, 'view')}
                           >
-                            <RiDeleteBin6Line
-                              size={20}
-                              className="text-white"
-                            />
+                            <SlEye size={20} />
+                          </button>
+                          <button
+                            className="hover:text-primary hover:bg-slate-100 rounded-full p-1"
+                            onClick={() => viewHandler(user, 'forward')}
+                          >
+                            <FaArrowRight size={20} />
                           </button>
                         </div>
                       </td>
@@ -245,17 +179,14 @@ const SecurityGuardComp: React.FC = () => {
               </table>
             </div>
           </div>
-
-          <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-            {deleteModal && (
-              <DeleteModal
-                name="Security Guard"
-                setModal={setDeleteModal}
-                id={currentId}
-              />
-            )}
-          </div>
-        </>
+          {/* {disableModal && (
+            <DisableModal
+              name="User"
+              setModal={setDisableModal}
+              id={currentId}
+            />
+          )} */}
+        </div>
       )}
     </>
   );

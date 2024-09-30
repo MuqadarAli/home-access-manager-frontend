@@ -47,6 +47,13 @@ export const visitorApi = createApi({
       }),
       providesTags: ['visitor'],
     }),
+    getApprovedVisitorForUser: builder.query({
+      query: ({user_id}) => ({
+        url: `/${user_id}`,
+        method: 'GET',
+      }),
+      providesTags: ['visitor'],
+    }),
   }),
 });
 
@@ -55,4 +62,5 @@ export const {
   useGetPendingVisitorForCommunityQuery,
   useVisitorApprovalByAdminMutation,
   useVisitorDisableByAdminMutation,
+  useGetApprovedVisitorForUserQuery
 } = visitorApi;

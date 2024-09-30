@@ -28,6 +28,7 @@ type AddType = {
 
 const AlertComp: React.FC = () => {
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
+  const [deleteEmergencyModal, setDeleteEmergencyModal] = useState<boolean>(false);
   const [currentId, setCurrentId] = useState<string>('');
   const [addError, setAddError] = useState<string>('');
   const [addSuccess, setAddSuccess] = useState<string>('');
@@ -64,6 +65,11 @@ const AlertComp: React.FC = () => {
 
   function deleteHandler(id: any) {
     setDeleteModal(!deleteModal);
+    setCurrentId(id);
+  }
+
+  function deleteEmergencyNumberHandler(id: any) {
+    setDeleteEmergencyModal(!deleteModal);
     setCurrentId(id);
   }
 
@@ -210,7 +216,7 @@ const AlertComp: React.FC = () => {
                 )}
               </div>
               {
-                <div className='w-fill flex justify-end mb-3'>
+                <div className="w-fill flex justify-end mb-3">
                   <button
                     type="submit"
                     className="flex w-30 sm:w-52 mt-3 justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90"
@@ -243,12 +249,15 @@ const AlertComp: React.FC = () => {
                     <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
                       Number
                     </th>
+                    <th className="min-w-[220px] py-4 px-4 font-medium text-black dark:text-white">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {emergency?.value?.map((type: any, key: number) => (
-                    <tr key={key}>
-                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                    <tr key={key} className="">
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark xl:pl-11">
                         <p className="text-black dark:text-white">
                           {type?.type}
                         </p>
@@ -257,6 +266,15 @@ const AlertComp: React.FC = () => {
                         <p className="text-black dark:text-white">
                           {type.number}
                         </p>
+                      </td>
+                      <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+                        <button
+                          className="hover:text-primary bg-red-400 hover:bg-slate-100 rounded-full p-1"
+                          onClick={() => deleteEmergencyNumberHandler(type?.id)}
+                          id="cross-button"
+                        >
+                          <RiDeleteBin6Line size={20} className="text-white" />
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -335,6 +353,13 @@ const AlertComp: React.FC = () => {
               <DeleteModal
                 name="Alert"
                 setModal={setDeleteModal}
+                id={currentId}
+              />
+            )}
+            {deleteEmergencyModal && (
+              <DeleteModal
+                name="Emergency Number"
+                setModal={setDeleteEmergencyModal}
                 id={currentId}
               />
             )}

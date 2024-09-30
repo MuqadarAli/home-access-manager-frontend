@@ -46,6 +46,13 @@ export const userApi = createApi({
       }),
       providesTags: ['user'],
     }),
+    getApprovedUsersByLotNumber: builder.query({
+      query: ({community_id, lot_number}) => ({
+        url: `/${community_id}/${lot_number}`,
+        method: 'GET',
+      }),
+      providesTags: ['user'],
+    }),
   }),
 });
 
@@ -54,4 +61,5 @@ export const {
   useGetApprovedUsersForCommunityQuery,
   useUserDisableByAdminMutation,
   useGetPendingUsersForCommunityQuery,
+  useGetApprovedUsersByLotNumberQuery
 } = userApi;

@@ -60,6 +60,8 @@ import { AddCommunityLeader } from './pages/CommunityLeader/AddcommunityLeader';
 import { CommunityLeaderDetail } from './pages/CommunityLeader/CommunityLeaderDetail';
 import { ApprovedWorker } from './pages/VisitorsAirbnb/ApprovedWorker';
 import { SecurityGuard } from './pages/SecurityGuard';
+import { VisitorsMenu } from './pages/SecurityGuard/VisitorsMenu';
+import { IncomingVisitors } from './pages/SecurityGuard/InComingVisitors';
 
 function App() {
   // const [loading, setLoading] = useState<boolean>(true);
@@ -113,6 +115,14 @@ function App() {
               <PageTitle title="Dashboard | Home Access Manager" />
               <AdminDashboard />
             </AdminLayout>
+          </IsAuth>
+        }
+      />
+      <Route
+        path="/security-guard/dashboard"
+        element={
+          <IsAuth>
+            <SecurityGuard/>
           </IsAuth>
         }
       />
@@ -471,13 +481,22 @@ function App() {
       {/* //--------------------------------------------Security Guard-----------------------------------------// */}
 
       <Route
-        path="/security-guard"
+        path="/security-guard/visitors-menu"
         element={
           <IsAuth>
-            <SecurityGuard />
+            <VisitorsMenu />
           </IsAuth>
         }
       />
+      <Route
+        path="/security-guard/incoming-visitors"
+        element={
+          <IsAuth>
+            <IncomingVisitors />
+          </IsAuth>
+        }
+      />
+
 
       {/* Page Not Found */}
       <Route path="*" element={<PageNotFound />}></Route>
