@@ -11,7 +11,6 @@ interface IsAuthProps {
 }
 
 export const IsAuth = ({ children }: IsAuthProps) => {
-
   const token = useSelector(
     (state: RootState) => state.persistedReducer.auth.token,
   );
@@ -44,7 +43,9 @@ export const IsAuth = ({ children }: IsAuthProps) => {
           navigate('/', { replace: true });
         }
       } catch (error) {
-        profile?.role === 'admin' ? navigate('/') : navigate('/login');
+        profile?.role === 'admin' || profile?.role === 'security_guard'
+          ? navigate('/')
+          : navigate('/login');
         persister.purge();
         dispatch(logout());
         console.log(
@@ -56,17 +57,22 @@ export const IsAuth = ({ children }: IsAuthProps) => {
     };
 
     verifyToken();
-  }, [token]);
+  }, [token]);  
 
   useEffect(() => {
     if (isAuthenticated) {
-      
       if (profile?.role === 'admin') {
         // User with community trying to access a super-admin route
         if (location?.pathname?.startsWith('/super-admin')) {
           navigate('/dashboard', { replace: true });
         }
+      } else if (profile?.role === 'security_guard') {
+        // Ensure security-guard can only access paths that start with '/security-guard'
+        if (!location?.pathname?.startsWith('/security_guard')) {
+          navigate('/security-guard/dashboard', { replace: true });
+        }
       }
+
       //  else {
       //   // Super-admin trying to access a non-super-admin route
       //   if (!location?.pathname?.startsWith('/super-admin')) {
@@ -83,6 +89,6 @@ export const IsAuth = ({ children }: IsAuthProps) => {
   return isAuthenticated ? (
     <>{children}</>
   ) : (
-    <Navigate to={profile?.community ? '/' : '/login'} replace />
+    <Navigate to={profile?.role === 'admin' || profile?.role === 'security_guard' ? '/' : '/login'} replace />
   );
 };

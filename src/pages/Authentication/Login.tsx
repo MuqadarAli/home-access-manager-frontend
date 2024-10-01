@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo.png';
 import Logo from '../../images/logo.png';
-import { useAdminLoginMutation } from '../../redux/rtk-query/auth';
+import { useAdminLoginMutation, useSecurityGuardLoginMutation } from '../../redux/rtk-query/auth';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated, setToken } from '../../redux/slice/auth';
@@ -13,7 +13,9 @@ import ErrorMessage from '../../components/Alert/ErrorMessage';
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [login, { isError, isLoading }] = useAdminLoginMutation();
+  const [guardLogin, { isError: guardError, isLoading: guardLoading }] = useSecurityGuardLoginMutation();
   const [loginError, setLoginError] = useState<string>('');
+  const [role, setRole] = useState('admin');
   const dispatch = useDispatch();
   const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
   const {
@@ -29,7 +31,8 @@ const Login: React.FC = () => {
 
   const onSubmit: any = async (data: any) => {
     try {
-      const response = await login(data).unwrap();
+      let response;
+       response = role === 'admin' ? await login(data).unwrap() : await guardLogin(data).unwrap();
       if (response?.statusCode == 200) {
         dispatch(setToken(response?.token));
         dispatch(setAuthenticated(true));
@@ -53,9 +56,15 @@ const Login: React.FC = () => {
   );
 
   if (isAuthenticated) {
-    if (profile?.role === 'admin') {
+    if (profile?.role === 'admin' ) {
       return <Navigate to="/dashboard" replace />;
     } 
+   else if (profile?.role === 'security_guard' ) {
+      return <Navigate to="/security-guard/dashboard" replace />;
+    }
+   else if (profile?.role === 'super_admin' ) {
+      return <Navigate to="/super-admin/dashboard" replace />;
+    }
   }
   return (
     <>
@@ -206,8 +215,16 @@ const Login: React.FC = () => {
 
             <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
               <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
+              <div className="mb-4 flex justify-center gap-5">
+                  <button onClick={() => setRole('admin')} className={`p-4 w-60 ${role === 'admin' ? 'cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90' : 'bg-gray-200 text-black border border-primary rounded-lg'}`}>
+                    Admin
+                  </button>
+                  <button onClick={() => setRole('security_guard')} className={`p-4 w-60 ${role === 'security_guard' ? 'cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90' : 'bg-gray-200 text-black border border-primary rounded-lg'}`}>
+                    Guard
+                  </button>
+                </div>
                 <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                  Community Admin Login
+                  {`Community ${role === 'admin' ? 'Admin' : "Guard"} Login`}
                 </h2>
 
                 <form
@@ -318,7 +335,7 @@ const Login: React.FC = () => {
                       value="Sign In"
                       className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                     >
-                      {!isLoading ? 'Login' : <Loader />}
+                      {!isLoading || !guardLoading ? 'Login' : <Loader />}
                     </button>
                   </div>
 
@@ -333,7 +350,7 @@ const Login: React.FC = () => {
                     </p>
                   </div>
                 </form>
-                {isError && <p className="text-red-500">Login Failed</p>}
+                {isError || guardError && <p className="text-red-500">Login Failed</p>}
                 {showErrorMessage && (
                   <ErrorMessage
                     message={loginError}

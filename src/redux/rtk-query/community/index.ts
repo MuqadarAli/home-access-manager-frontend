@@ -91,6 +91,15 @@ export const communityApi = createApi({
       invalidatesTags: ['emergency'],
     }),
 
+    deleteEmergencyNumber: builder.mutation({
+      query: (body) => ({
+        url: `/emergency-number`,
+        method: 'DELETE',
+        body: body,
+      }),
+      invalidatesTags: ['emergency'],
+    }),
+
     addSecurityGuard: builder.mutation({
       query: (body) => ({
         url: '/security-guard',
@@ -131,5 +140,6 @@ export const {
   useAddEmergencyNumberMutation,
   useAddSecurityGuardMutation,
   useDeleteSecurityGuardMutation,
-  useGetSecurityGuardQuery
+  useGetSecurityGuardQuery,
+  useDeleteEmergencyNumberMutation
 } = communityApi;

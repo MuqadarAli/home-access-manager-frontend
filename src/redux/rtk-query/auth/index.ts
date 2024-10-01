@@ -35,6 +35,14 @@ export const authApi = createApi({
       }),
     }),
 
+    securityGuardLogin: builder.mutation({
+      query: (body) => ({
+        url: '/security-guard-login',
+        method: 'POST',
+        body: body,
+      }),
+    }),
+
     superAdminChangePass: builder.mutation({
       query: (body) => ({
         url: 'super-admin-change-password',
@@ -104,4 +112,5 @@ export const {
   useAdminResetPassMutation,
   useSuperAdminForgotPassMutation,
   useSuperAdminResetPassMutation,
+  useSecurityGuardLoginMutation
 } = authApi;

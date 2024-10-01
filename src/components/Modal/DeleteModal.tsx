@@ -9,7 +9,10 @@ import { useDeleteAlertMutation } from '../../redux/rtk-query/alert';
 import { useDeleteFeaturedMutation } from '../../redux/rtk-query/featured';
 import { useDeleteMeetingMutation } from '../../redux/rtk-query/meeting';
 import { useDeleteCommunityLeaderMutation } from '../../redux/rtk-query/communityLeader';
-import { useDeleteSecurityGuardMutation } from '../../redux/rtk-query/community';
+import {
+  useDeleteEmergencyNumberMutation,
+  useDeleteSecurityGuardMutation,
+} from '../../redux/rtk-query/community';
 
 type DeleteModalType = {
   id: string;
@@ -62,6 +65,14 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
       isSuccess: securitySuccess,
     },
   ] = useDeleteSecurityGuardMutation();
+  const [
+    deleteEmergencyNum,
+    {
+      isError: emergencyError,
+      isLoading: emergencyLoading,
+      isSuccess: emergencySuccess,
+    },
+  ] = useDeleteEmergencyNumberMutation();
 
   const cancelHandler = () => {
     setOpen(false);
@@ -115,6 +126,13 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
           break;
         case 'Security Guard':
           await deleteSecurity({ id }).unwrap();
+          setTimeout(() => {
+            setOpen(false);
+            setModal(false);
+          }, 2000);
+          break;
+        case 'Emergency Number':
+          await deleteEmergencyNum({ id }).unwrap();
           setTimeout(() => {
             setOpen(false);
             setModal(false);
@@ -181,7 +199,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                       featuredLoading ||
                       meetingLoading ||
                       communityLeaderLoading ||
-                      securityLoading
+                      securityLoading ||
+                      emergencyLoading
                     }
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-3 text-white transition hover:bg-opacity-90"
                   >
@@ -191,7 +210,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                     !featuredLoading ||
                     !meetingLoading ||
                     !communityLeaderLoading ||
-                    !securityLoading ? (
+                    !securityLoading ||
+                    !emergencyLoading ? (
                       'Delete'
                     ) : (
                       <Loader />
@@ -204,7 +224,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                   featuredSuccess ||
                   meetingSuccess ||
                   communityLeaderSuccess ||
-                  securitySuccess) && (
+                  securitySuccess ||
+                  emergencySuccess) && (
                   <div id="delete-alert" className="mt-3">
                     <SuccessAlert name={name} action="Delete" />
                   </div>
@@ -215,7 +236,8 @@ export function DeleteModal({ name, setModal, id }: DeleteModalType) {
                   featuredError ||
                   meetingError ||
                   communityLeaderError ||
-                  securityError) && (
+                  securityError ||
+                  emergencyError) && (
                   <div id="error-delete-alert" className="mt-3">
                     <ErrorAlert />
                   </div>

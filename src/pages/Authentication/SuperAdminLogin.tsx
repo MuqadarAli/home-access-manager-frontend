@@ -53,9 +53,13 @@ const SuperAdminLogin: React.FC = () => {
   );
 
   if (isAuthenticated) {
-    if (profile?.role === 'admin') {
+    if (profile?.role === 'admin' ) {
       return <Navigate to="/dashboard" replace />;
-    } else {
+    } 
+   else if (profile?.role === 'security_guard' ) {
+      return <Navigate to="/security-guard/dashboard" replace />;
+    }
+   else if (profile?.role === 'super_admin' ) {
       return <Navigate to="/super-admin/dashboard" replace />;
     }
   }
